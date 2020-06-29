@@ -1,8 +1,12 @@
 import { combineReducers } from "redux";
-import UserReducer from "./userReducer";
+import user from "./userReducer";
+import bannerList from "./banners";
+import notification from "./notifications";
 
 const reducers = {
-  user: UserReducer,
+  user,
+  bannerList,
+  notification,
 };
 
 export default combineReducers(reducers);

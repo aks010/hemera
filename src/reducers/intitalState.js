@@ -3,6 +3,8 @@ const initialState = {
     name: "ashish",
     role: "admin",
   },
+  bannerList: [],
+  banners: [],
 };
 
 export default initialState;

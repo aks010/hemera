@@ -1,0 +1,48 @@
+.banner{
+    border: 1px solid black;
+    margin: 1.2rem;
+    position: relative;
+    height: max-content;
+    background-color: white;
+    line-height: 1.5;
+    /* box-sizing: content-box; */
+
+}
+
+.bannerOver {
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.bannerDown {
+    cursor: grabbing;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.dragHolder {
+    position: absolute;
+    top: 0;
+    width: 7px;
+    /* max-width: 10px; */
+    /* max-height: 10px; */
+    height: 10px;
+    cursor: grab;
+    margin-top: 2px;
+    margin-left: 2px;
+    left: 0;
+    line-height: 1; 
+    color: grey;
+    display: flex;  
+    /* flex-direction: row; */
+
+    flex-direction: column;
+}
+
+.dragBar {
+    width: 100%;    
+    border-bottom: 1px solid black;
+    border-radius: 1px;
+    margin: 1px;
+}
+
+.bannerModel {
+    padding: 1.2rem;
+}

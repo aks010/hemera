@@ -6,11 +6,9 @@ import store from "./store";
 import WrapperContainer from "./containers/WrapperContainer";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <WrapperContainer />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <WrapperContainer />
+  </Provider>,
   document.getElementById("root")
 );
 
