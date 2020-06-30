@@ -1,20 +1,23 @@
 .banner{
-    border: 1px solid black;
-    margin: 1.2rem;
+    /* border: 0.2px solid black; */
+    margin: 2rem 1rem;
     position: relative;
     height: max-content;
     background-color: white;
     line-height: 1.5;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
     /* box-sizing: content-box; */
 
 }
 
 .bannerOver {
-    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    cursor: grabbing;
+    box-shadow: 1px 1px 1px 1px rgba(67, 134, 252, 1);
 }
 .bannerDown {
     cursor: grabbing;
-    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px 1px 1px rgba(67, 134, 252, 1);
 }
 
 .dragHolder {

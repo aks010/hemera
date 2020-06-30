@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
 
 
-const DragHandle = SortableHandle(() => <div className={"dragHolder"}>
+const DragHandle = SortableHandle(() => <div className={"dragHolder"} >
     {/* <div className={"dragBarDiv"}> */}
     {/* <span className={"dragBar"}></span>
     <span className={"dragBar"}></span>
@@ -18,23 +18,20 @@ class BannerRouter extends React.Component {
         style: "banner"
     }
 
-    getStyleClass = (event) => {
-        switch(event) {
-            case "over": {
+    handleMouseOver = () => {
                 this.setState({style: "banner bannerOver"})
-                return
-            }
-            case "down": {
-                this.setState({style: "banner bannerDown"})
-                return
-            }
-        }
-    }
 
+            }
+    handleMouseDown = () => {
+                this.setState({style: "banner bannerDown"})
+            }
+        handleMouseOut = () => {
+            this.setState({style: "banner"})
+        }
 render() {
     // console.log(this.props)
     return (
-        <div className={this.state.style} onMouseOver={this.getStyleClass} onMouseOut={this.getStyleClass}>
+        <div className={this.state.style} onMouseOver={this.handleMouseOver} onMouseDown={this.handleMouseDown} onMouseOut={this.handleMouseOut}>
             <DragHandle/>
             <div className={"bannerModel"}>
                 

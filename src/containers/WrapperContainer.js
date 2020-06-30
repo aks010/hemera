@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
-import Banners from "../components/index.jsx";
+import Banners from "../components/bannerList/BannerListContainer.jsx";
 
 import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";

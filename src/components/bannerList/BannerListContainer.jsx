@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import arrayMove from "array-move";
 import { connect } from "react-redux";
-import { FetchBannerList, UpdatePriority } from "../actions/index";
+import { FetchBannerList, UpdatePriority } from "../../actions/index";
 import "./index.css";
 import Banners from "./Banners";
 
@@ -20,11 +20,13 @@ class BannerListContainer extends Component {
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
     console.log("RUNNING")
-    await this.props.UpdatePriority(this.state.items[oldIndex]._id, newIndex)
-    console.log(this.state.items[oldIndex]._id, newIndex)
-    this.setState({
-      items: arrayMove(this.state.items, oldIndex, newIndex),
-    });
+    if(oldIndex !== newIndex) {
+      await this.props.UpdatePriority(this.state.items[oldIndex]._id, newIndex)
+      console.log(this.state.items[oldIndex]._id, newIndex)
+      this.setState({
+        items: arrayMove(this.state.items, oldIndex, newIndex),
+      });
+    }
   };
   render() {
     return (
