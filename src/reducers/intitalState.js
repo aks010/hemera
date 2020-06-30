@@ -5,6 +5,7 @@ const initialState = {
   },
   bannerList: [],
   banners: [],
+  notification: {},
 };
 
 export default initialState;

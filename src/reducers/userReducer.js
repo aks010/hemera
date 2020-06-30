@@ -1,7 +1,7 @@
 import initialState from "./intitalState";
 import { USER_DETAILS } from "../actions/constants";
 
-const UserReducer = (state = initialState, actions) => {
+const UserReducer = (state = initialState.user, actions) => {
   switch (actions.type) {
     case USER_DETAILS:
       return { ...state, ...actions.payload };

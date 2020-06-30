@@ -2,9 +2,12 @@ import React from 'react'
 import {SortableElement, SortableHandle } from 'react-sortable-hoc'
 import BannerRouter from './BannerRouter';
 
-const BannerContainer = SortableElement(({value}) => {
+const BannerContainer = SortableElement((props) => {
+    // console.log("HERE")
+    // console.log(props)
     return (
-        <BannerRouter banner={value} />
+        
+        <BannerRouter banner={props.value} key={props.key} index={props.index} />
     )
 }
 )

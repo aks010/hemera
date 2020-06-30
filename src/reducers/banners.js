@@ -1,7 +1,7 @@
 import { BANNER_LIST } from "../actions/constants";
 import initialState from "./intitalState";
 
-const BannersList = (state = initialState, action) => {
+const BannersList = (state = initialState.bannerList, action) => {
   if (action.type === BANNER_LIST) {
     return action.payload;
   } else return state;

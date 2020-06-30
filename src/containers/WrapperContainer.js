@@ -7,6 +7,7 @@ import Login from "./Login";
 import Page404 from "./Page404";
 import Notification from "./Notification";
 import "./index.css";
+// import "../utils/fontAwesome";
 
 const WrapperContainer = () => {
   return (
