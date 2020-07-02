@@ -16,10 +16,7 @@ const GetMessageParams = (status) => {
 };
 
 class Notification extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  UNSAFE_componentWillReceiveProps = (nP) => {
+  componentWillReceiveProps = (nP) => {
     console.log("cAlle");
     console.log(nP);
     if (nP.message) {
