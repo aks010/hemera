@@ -34,13 +34,13 @@ class editBanner extends React.Component {
           </Modal.Content>
           <Modal.Actions>
             <Button color="black" onClick={this.handleClose}>
-              Nope
+              Everthing's Cool !
             </Button>
             <Button
               positive
               icon="checkmark"
               labelPosition="right"
-              content="Yep, that's me"
+              content="Make it Cooler!"
               onClick={this.hanldeSubmit}
             />
           </Modal.Actions>

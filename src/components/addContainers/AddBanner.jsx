@@ -11,7 +11,6 @@ class AddBanner extends React.Component {
       <div>
         <Modal
           open={this.props.open}
-          closeOnEscape={false}
           closeOnDimmerClick={false}
           onClose={this.props.handleClose}
         >

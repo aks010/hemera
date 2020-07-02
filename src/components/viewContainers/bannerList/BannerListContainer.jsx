@@ -8,7 +8,7 @@ import { Switch, Route } from "react-router-dom";
 import TestContainer from "../../../containers/TestContainer";
 import EditBannerModal from "../../editContainers/EditBanner";
 import AddBannerModal from "../../addContainers/AddBanner";
-
+import { Header } from "semantic-ui-react";
 class BannerListContainer extends Component {
   state = {
     items: [],
@@ -81,7 +81,11 @@ class BannerListContainer extends Component {
             path="/"
             render={(props) => {
               return (
-                <div>
+                <div className={"content-container"}>
+                  <Header as="h3" dividing>
+                    Banners
+                  </Header>
+
                   <Banners
                     items={this.state.items}
                     useDragHandle={true}
