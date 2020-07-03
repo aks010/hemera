@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 
 class editBanner extends React.Component {
   handleClose = () => {
-    window.location.href = "/banners";
+    return this.props.history.goBack();
   };
   handleSubmit = () => {
-    window.location.href = "/banners";
+    return this.props.history.goBack();
   };
   render() {
     console.log("IMODAL");

@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import Banners from "../components/viewContainers/bannerList/BannerListContainer.jsx";
-
+// import history from "./history";
 import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
 import Page404 from "./Page404";

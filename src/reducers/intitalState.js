@@ -6,6 +6,14 @@ const initialState = {
   bannerList: [],
   banners: [],
   notification: {},
+  categoryList: [],
+  selected: {
+    banner: {},
+    category: {},
+    type: {},
+    model: {},
+  },
+  modelList: [],
 };
 
 export default initialState;
