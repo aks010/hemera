@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import arrayMove from "array-move";
 import { connect } from "react-redux";
-import { FetchItemList, UpdateModelPriority } from "../../../actions/index";
+import { Link } from "react-router-dom";
+import {
+  FetchItemList,
+  UpdateModelPriority,
+  GetBannerDetails,
+  GetCategoryDetails,
+} from "../../../actions/index";
 import "./index.css";
 import Banners from "./ModelSortContainer";
 import { Switch, Route } from "react-router-dom";
 import TestContainer from "../../../containers/TestContainer";
 import EditBannerModal from "../../editContainers/EditBanner";
 import AddBannerModal from "../../addContainers/AddBanner";
-import { Header } from "semantic-ui-react";
+import { Header, List } from "semantic-ui-react";
 
 class ModelListContainer extends Component {
   state = {
@@ -19,6 +25,13 @@ class ModelListContainer extends Component {
   handleCloseAddModal = () => this.setState({ addNewItem: false });
 
   componentWillMount = async () => {
+    if (this.props.location.pathname.includes("category"))
+      if (Object.keys(this.props.selectedCategory).length === 0) {
+        await this.props.GetCategoryDetails(this.props.match.params.CID);
+      }
+    if (Object.keys(this.props.selectedBanner).length === 0) {
+      await this.props.GetBannerDetails(this.props.match.params.BID);
+    }
     console.log(this.props.match.params.model.toLowerCase());
     if (this.props.location.pathname.includes("category")) {
       await this.props.FetchItemList(
@@ -97,8 +110,24 @@ class ModelListContainer extends Component {
     return (
       <div className={"content-container"}>
         <Header as="h3" dividing>
-          Items
+          {this.props.location.pathname.includes("category") ? (
+            <React.Fragment>{this.props.selectedBanner.title}</React.Fragment>
+          ) : (
+            <React.Fragment>{this.props.selectedCategory.title}</React.Fragment>
+          )}
         </Header>
+        <List bulleted horizontal link>
+          <List.Item as="a">
+            <Link to="/banners">Banners</Link>
+          </List.Item>
+          <List.Item as="a"> {this.props.selectedBanner.title}</List.Item>
+          {this.props.location.pathname.includes("category") && (
+            <List.Item as="a"> {this.props.selectedCategory.title}</List.Item>
+          )}
+        </List>
+        <div className={"banner-add-section"} onClick={this.handleOpenAddModal}>
+          Add New Item
+        </div>
         {Array.isArray(this.state.items) ? (
           <Banners
             {...this.props}
@@ -130,9 +159,6 @@ class ModelListContainer extends Component {
           </div>
         )}
 
-        <div className={"banner-add-section"} onClick={this.handleOpenAddModal}>
-          Add New Item
-        </div>
         <AddBannerModal
           open={this.state.addNewItem}
           handleClose={this.handleCloseAddModal}
@@ -145,10 +171,14 @@ class ModelListContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     modelList: state.modelList,
+    selectedCategory: state.selected.category,
+    selectedBanner: state.selected.banner,
   };
 };
 
 export default connect(mapStateToProps, {
   FetchItemList,
   UpdateModelPriority,
+  GetCategoryDetails,
+  GetBannerDetails,
 })(ModelListContainer);

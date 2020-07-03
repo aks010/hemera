@@ -8,7 +8,7 @@ import { Switch, Route } from "react-router-dom";
 import TestContainer from "../../../containers/TestContainer";
 import EditBannerModal from "../../editContainers/EditBanner";
 import AddBannerModal from "../../addContainers/AddBanner";
-import { Header } from "semantic-ui-react";
+import { Header, List } from "semantic-ui-react";
 import CategoryRouter from "../category/CategoryRouter";
 
 class BannerListContainer extends Component {
@@ -70,6 +70,9 @@ class BannerListContainer extends Component {
                   <Header as="h3" dividing>
                     Banners
                   </Header>
+                  <List bulleted horizontal link>
+                    <List.Item as="a">Banners</List.Item>
+                  </List>
                   <div
                     className={"banner-add-section"}
                     onClick={this.handleOpenAddModal}

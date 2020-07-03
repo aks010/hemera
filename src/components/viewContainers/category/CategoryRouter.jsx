@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
   FetchCategoryList,
   UpdateCategoryPriority,
+  GetBannerDetails,
 } from "../../../actions/index";
 import "./index.css";
 import CategorySortContainer from "./CategorySortContainer";
@@ -27,8 +28,8 @@ class CategoryRouter extends Component {
   componentWillMount = async () => {
     console.log("ENETER");
     console.log(this.props.match.params);
-    if (!this.props.selectedBanner) {
-      // fetch banner details /:BID
+    if (Object.keys(this.props.selectedBanner).length === 0) {
+      await this.props.GetBannerDetails(this.props.match.params.BID);
     }
     await this.props.FetchCategoryList(this.props.match.params.BID);
   };
@@ -121,4 +122,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   FetchCategoryList,
   UpdateCategoryPriority,
+  GetBannerDetails,
 })(CategoryRouter);

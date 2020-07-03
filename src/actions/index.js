@@ -65,6 +65,29 @@ export const SelectModel = (select) => {
 
 /// BANNER APIs
 
+export const GetBannerDetails = (id) => async (dispatch) => {
+  const response = await API.get(`banners/read/${id}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(SelectBanner(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 export const FetchBannerList = () => async (dispatch) => {
   const response = await API.get("banners");
   switch (response.status) {
@@ -116,6 +139,29 @@ export const UpdateBannerPriority = (id, priority) => async (dispatch) => {
 };
 
 /// CATEGORY APIs
+
+export const GetCategoryDetails = (id) => async (dispatch) => {
+  const response = await API.get(`category/read/${id}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(SelectCategory(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
 
 export const FetchCategoryList = (BID) => async (dispatch) => {
   const response = await API.get(`category/list/${BID}`);
