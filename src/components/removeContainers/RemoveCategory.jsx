@@ -1,16 +1,28 @@
 import React from "react";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+import { Button, Header, Modal, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { RemoveCategory } from "../../actions";
 
-class RemoveCategory extends React.Component {
-  handleSubmit = () => {
-    // Remove Action
-    window.location.href = "/banners";
+class RemoveCategoryModal extends React.Component {
+  state = {
+    category: {},
+  };
+  componentWillReceiveProps = (nP) => {
+    this.setState({ category: nP.category });
+  };
+
+  handleSubmit = async () => {
+    console.log("REMOVE CATEGORY");
+    console.log(this.state.category);
+    const BID = this.props.params;
+    await this.props.RemoveCategory(this.state.category._id, BID);
+    console.log("DELETE OPR");
+    this.props.handleClose();
   };
   render() {
-    // console.log("IMODAL");
-    // console.log(this.props);
-    // console.log("CLICKS");
+    const { category } = this.state;
+    console.log("REMOVEODAL");
+    console.log(this.state.category);
     return (
       <div>
         <Modal
@@ -18,17 +30,23 @@ class RemoveCategory extends React.Component {
           closeOnEscape={false}
           closeOnDimmerClick={false}
           onClose={this.props.handleClose}
+          basic
+          size="small"
         >
-          <Modal.Header>Delete Your Account</Modal.Header>
+          <Header
+            icon="archive"
+            content={`Delete Category ${category.title}`}
+          />
           <Modal.Content>
-            <p>Are you sure you want to delete your account</p>
+            <p>This will result in deletion of all inner nested items.</p>
+            <p>Are you sure you want to delete category {category.title}?</p>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={this.props.handleClose} negative>
-              Yes
+            <Button color="red" inverted onClick={this.handleSubmit}>
+              <Icon name="checkmark" /> Confirm Delete
             </Button>
-            <Button onClick={this.props.handleClose} positive>
-              No
+            <Button color="green" inverted onClick={this.props.handleClose}>
+              <Icon name="remove" /> Leave
             </Button>
           </Modal.Actions>
         </Modal>
@@ -37,4 +55,12 @@ class RemoveCategory extends React.Component {
   }
 }
 
-export default connect(null)(RemoveCategory);
+const mapStateToProps = (state) => {
+  return {
+    category: state.selected.category,
+  };
+};
+
+export default connect(mapStateToProps, { RemoveCategory })(
+  RemoveCategoryModal
+);

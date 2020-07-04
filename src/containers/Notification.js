@@ -17,8 +17,8 @@ const GetMessageParams = (status) => {
 
 class Notification extends React.Component {
   componentWillReceiveProps = (nP) => {
-    console.log("cAlle");
-    console.log(nP);
+    // console.log("cAlle");
+    // console.log(nP);
     if (nP.message) {
       const { title, type } = GetMessageParams(nP.status);
       store.addNotification({
@@ -44,8 +44,8 @@ class Notification extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("CALLED");
-  console.log(state.notification);
+  // console.log("CALLED");
+  // console.log(state.notification);
   const { message, status } = state.notification;
   return { message, status };
 };

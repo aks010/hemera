@@ -7,9 +7,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import RemoveCategory from "../../removeContainers/RemoveBanner";
+import RemoveCategory from "../../removeContainers/RemoveCategory";
 import EditCategory from "../../editContainers/EditCategory";
-import { SelectCategory } from "../../../actions/index";
+import { GetCategoryDetails } from "../../../actions/index";
 
 class BannerToolBar extends React.Component {
   state = { removeModal: false, editModal: false };
@@ -24,46 +24,41 @@ class BannerToolBar extends React.Component {
         <Link to={`${this.props.url}/${this.props.id}/${this.props.model}`}>
           <FontAwesomeIcon icon={faEye} color={"rgb(34, 34, 34)"} />
         </Link>
+
         <span style={{ widht: "1rem", margin: "1rem" }} />
+
         <FontAwesomeIcon
           icon={faPencilAlt}
           color={"rgb(34, 34, 34)"}
           onClick={this.handleOpenEditModal}
         />
         <span style={{ widht: "1rem", margin: "1rem" }} />
-        {/* <Link to={`/banners/${this.props.id}/edit`}> */}
+
         <FontAwesomeIcon
           icon={faTrashAlt}
           color={"rgb(34, 34, 34)"}
           onClick={this.handleOpenRemoveModal}
         />
+
         <RemoveCategory
           open={this.state.removeModal}
           id={this.props.id}
           handleClose={this.handleCloseRemoveModal}
+          params={this.props.BID}
         />
         <EditCategory
           open={this.state.editModal}
           id={this.props.id}
           handleClose={this.handleCloseEditModal}
         />
-        {/* </Link> */}
       </div>
     );
   }
 }
 
 class CategoryHeader extends React.Component {
-  handleSelect = () => {
-    console.log("TOE");
-    console.log(this.props);
-    this.props.SelectCategory({
-      id: this.props._id,
-      title: this.props.title,
-      link: this.props.link,
-      model: this.props.model,
-      hasCategory: this.props.hasCategory,
-    });
+  handleSelect = async () => {
+    await this.props.GetCategoryDetails(this.props._id);
   };
   render() {
     console.log(this.props);
@@ -76,10 +71,11 @@ class CategoryHeader extends React.Component {
           link={this.props.link}
           model={this.props.childModel}
           url={this.props.match.url}
+          BID={this.props.match.params.BID}
         />
       </div>
     );
   }
 }
 
-export default connect(null, { SelectCategory })(CategoryHeader);
+export default connect(null, { GetCategoryDetails })(CategoryHeader);

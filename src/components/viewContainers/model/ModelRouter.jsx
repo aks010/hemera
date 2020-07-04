@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import arrayMove from "array-move";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { Header, List } from "semantic-ui-react";
+import arrayMove from "array-move";
+
 import {
   FetchItemList,
   UpdateModelPriority,
@@ -10,55 +13,61 @@ import {
 } from "../../../actions/index";
 import "./index.css";
 import Banners from "./ModelSortContainer";
-import { Switch, Route } from "react-router-dom";
-import TestContainer from "../../../containers/TestContainer";
-import EditBannerModal from "../../editContainers/EditBanner";
 import AddBannerModal from "../../addContainers/AddBanner";
-import { Header, List } from "semantic-ui-react";
 
 class ModelListContainer extends Component {
   state = {
     items: [],
+    selected: {
+      banner: {},
+      category: {},
+    },
+    isCategory: false,
     addNewItem: false,
   };
   handleOpenAddModal = () => this.setState({ addNewItem: true });
   handleCloseAddModal = () => this.setState({ addNewItem: false });
 
-  componentWillMount = async () => {
-    if (this.props.location.pathname.includes("category"))
-      if (Object.keys(this.props.selectedCategory).length === 0) {
-        await this.props.GetCategoryDetails(this.props.match.params.CID);
-      }
-    if (Object.keys(this.props.selectedBanner).length === 0) {
-      await this.props.GetBannerDetails(this.props.match.params.BID);
+  componentDidMount = async () => {
+    const { banner, category } = this.props.selected;
+    const { CID, BID, model } = this.props.match.params;
+    const isCategory = this.props.location.pathname
+      .toLowerCase()
+      .includes("category");
+
+    if (isCategory && Object.keys(category).length === 0)
+      await this.props.GetCategoryDetails(CID);
+
+    if (Object.keys(banner).length === 0) {
+      await this.props.GetBannerDetails(BID);
     }
-    console.log(this.props.match.params.model.toLowerCase());
-    if (this.props.location.pathname.includes("category")) {
-      await this.props.FetchItemList(
-        this.props.match.params.CID,
-        this.props.match.params.model.toLowerCase()
-      );
+
+    console.log(model.toLowerCase());
+
+    if (isCategory) {
+      await this.props.FetchItemList(CID, model.toLowerCase());
     } else {
-      await this.props.FetchItemsList(
-        this.props.match.params.BID,
-        this.props.match.params.model.toLowerCase()
-      );
+      await this.props.FetchItemList(BID, model.toLowerCase());
     }
+    this.setState({ isCategory });
   };
-  componentWillReceiveProps = (nP) => {
-    this.setState({ items: nP.modelList });
+
+  UNSAFE_componentWillReceiveProps = (nP) => {
+    this.setState({ items: nP.modelList, selected: nP.selected });
   };
 
   onSortEnd = async ({ oldIndex, newIndex, o }) => {
-    console.log("RUNNING");
+    const { CID, BID, model } = this.props.match.params;
+    const { isCategory } = this.state;
+
     if (oldIndex !== newIndex) {
       if (!Array.isArray(this.state.items)) {
-        if (this.props.location.pathname.includes("category")) {
+        if (isCategory) {
           await this.props.UpdateModelPriority(
-            this.props.match.params.CID,
+            CID,
             this.state.items[o][oldIndex]._id,
             newIndex,
-            this.props.match.params.model.toLowerCase(),
+            model.toLowerCase(),
             o
           );
           const newItems = this.state.items;
@@ -68,10 +77,10 @@ class ModelListContainer extends Component {
           });
         } else {
           await this.props.UpdateModelPriority(
-            this.props.match.params.BID,
+            BID,
             this.state.items[o][oldIndex]._id,
             newIndex,
-            this.props.match.params.model.toLowerCase(),
+            model.toLowerCase(),
             o
           );
           const newItems = this.state.items;
@@ -83,20 +92,20 @@ class ModelListContainer extends Component {
       } else {
         if (this.props.location.pathname.includes("category")) {
           await this.props.UpdateModelPriority(
-            this.props.match.params.CID,
+            CID,
             this.state.items[oldIndex]._id,
             newIndex,
-            this.props.match.params.model.toLowerCase()
+            model.toLowerCase()
           );
           this.setState({
             items: arrayMove(this.state.items, oldIndex, newIndex),
           });
         } else {
           await this.props.UpdateModelPriority(
-            this.props.match.params.BID,
+            BID,
             this.state.items[oldIndex]._id,
             newIndex,
-            this.props.match.params.model.toLowerCase()
+            model.toLowerCase()
           );
           this.setState({
             items: arrayMove(this.state.items, oldIndex, newIndex),
@@ -105,26 +114,34 @@ class ModelListContainer extends Component {
       }
     }
   };
+
   render() {
-    console.log(this.props);
+    const { banner, category } = this.props.selected;
+    const { CID, BID, model } = this.props.match.params;
+    const { isCategory } = this.state;
+
     return (
       <div className={"content-container"}>
         <Header as="h3" dividing>
-          {this.props.location.pathname.includes("category") ? (
-            <React.Fragment>{this.props.selectedBanner.title}</React.Fragment>
+          {isCategory ? (
+            <React.Fragment>{category.title}</React.Fragment>
           ) : (
-            <React.Fragment>{this.props.selectedCategory.title}</React.Fragment>
+            <React.Fragment>{banner.title}</React.Fragment>
           )}
         </Header>
+
         <List bulleted horizontal link>
           <List.Item as="a">
             <Link to="/banners">Banners</Link>
           </List.Item>
-          <List.Item as="a"> {this.props.selectedBanner.title}</List.Item>
-          {this.props.location.pathname.includes("category") && (
-            <List.Item as="a"> {this.props.selectedCategory.title}</List.Item>
-          )}
+          <List.Item as="a">
+            <Link to={`/banners/banner/${BID}/${banner.model}`}>
+              {banner.title}
+            </Link>
+          </List.Item>
+          {isCategory && <List.Item as="a">{category.title}</List.Item>}
         </List>
+
         <div className={"banner-add-section"} onClick={this.handleOpenAddModal}>
           Add New Item
         </div>
@@ -171,8 +188,7 @@ class ModelListContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     modelList: state.modelList,
-    selectedCategory: state.selected.category,
-    selectedBanner: state.selected.banner,
+    selected: state.selected,
   };
 };
 

@@ -1,16 +1,27 @@
 import React from "react";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+import { Button, Header, Modal, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { RemoveBanner } from "../../actions";
 
-class RemoveBanner extends React.Component {
-  handleSubmit = () => {
-    // Remove Action
-    window.location.href = "/banners";
+class RemoveBannerModal extends React.Component {
+  state = {
+    banner: {},
+  };
+  componentWillReceiveProps = (nP) => {
+    this.setState({ banner: nP.banner });
+  };
+
+  handleSubmit = async () => {
+    console.log("SUBMIT");
+    console.log(this.state.banner);
+    await this.props.RemoveBanner(this.state.banner.id);
+    console.log("DELETE OPR");
+    this.props.history.goBack();
   };
   render() {
-    // console.log("IMODAL");
-    // console.log(this.props);
-    // console.log("CLICKS");
+    const { banner } = this.state;
+    console.log("REMOVEODAL");
+    console.log(this.state.banner);
     return (
       <div>
         <Modal
@@ -18,17 +29,20 @@ class RemoveBanner extends React.Component {
           closeOnEscape={false}
           closeOnDimmerClick={false}
           onClose={this.props.handleClose}
+          basic
+          size="small"
         >
-          <Modal.Header>Delete Your Account</Modal.Header>
+          <Header icon="archive" content={`Delete Banner ${banner.title}`} />
           <Modal.Content>
-            <p>Are you sure you want to delete your account</p>
+            <p>This will result in deletion of all nested items.</p>
+            <p>Are you sure you want to delete banner {banner.title}?</p>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={this.props.handleClose} negative>
-              Yes
+            <Button color="red" inverted onClick={this.handleSubmit}>
+              <Icon name="checkmark" /> Confirm Delete
             </Button>
-            <Button onClick={this.props.handleClose} positive>
-              No
+            <Button color="green" inverted onClick={this.props.handleClose}>
+              <Icon name="remove" /> Leave
             </Button>
           </Modal.Actions>
         </Modal>
@@ -37,4 +51,10 @@ class RemoveBanner extends React.Component {
   }
 }
 
-export default connect(null)(RemoveBanner);
+const mapStateToProps = (state) => {
+  return {
+    banner: state.selected.banner,
+  };
+};
+
+export default connect(mapStateToProps, { RemoveBanner })(RemoveBannerModal);

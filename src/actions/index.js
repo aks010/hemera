@@ -138,6 +138,31 @@ export const UpdateBannerPriority = (id, priority) => async (dispatch) => {
   }
 };
 
+export const RemoveBanner = (id) => async (dispatch) => {
+  const response = await API.delete(`banners/remove/${id}`);
+  console.log(response.status);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      FetchBannerList();
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 /// CATEGORY APIs
 
 export const GetCategoryDetails = (id) => async (dispatch) => {
@@ -218,9 +243,59 @@ export const UpdateCategoryPriority = (BID, CID, priority) => async (
   }
 };
 
+export const RemoveCategory = (id, BID) => async (dispatch) => {
+  const response = await API.delete(`category/remove/${id}`);
+  console.log(response.status);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchCategoryList(BID)(dispatch);
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 /// MODEL APIs
+
+export const FetchSelectedItem = (id, EID, model) => async (dispatch) => {
+  const response = await API.get(`${model}/item/${EID}/${id}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(SelectModel(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 export const FetchItemList = (EID, model) => async (dispatch) => {
   const response = await API.get(`${model}/list/${EID}`);
+  console.log("FETCHING ITEMS");
   switch (response.status) {
     case 200: {
       dispatch(ModelList(response.data.data));
@@ -266,6 +341,31 @@ export const UpdateModelPriority = (
           status: response.status,
         })
       );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const RemoveModelItem = (id, model, EID) => async (dispatch) => {
+  const response = await API.delete(`${model}/remove/${id}`);
+  console.log(response.status);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchItemList(EID, model)(dispatch);
       return;
     }
     default:

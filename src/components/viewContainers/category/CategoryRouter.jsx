@@ -1,61 +1,56 @@
 import React, { Component } from "react";
-import arrayMove from "array-move";
 import { connect } from "react-redux";
+import { Switch, Route, Link } from "react-router-dom";
+
+import { Header, List } from "semantic-ui-react";
+import arrayMove from "array-move";
+
+import CategorySortContainer from "./CategorySortContainer";
+import TestContainer from "../../../containers/TestContainer";
+import ModelContainer from "../model/ModelRouter";
+import AddBannerModal from "../../addContainers/AddBanner";
+import "./index.css";
+
 import {
   FetchCategoryList,
   UpdateCategoryPriority,
   GetBannerDetails,
 } from "../../../actions/index";
-import "./index.css";
-import CategorySortContainer from "./CategorySortContainer";
-import { Switch, Route } from "react-router-dom";
-import TestContainer from "../../../containers/TestContainer";
-import EditBannerModal from "../../editContainers/EditBanner";
-import ModelContainer from "../model/ModelRouter";
-import AddBannerModal from "../../addContainers/AddBanner";
-import { Header, List } from "semantic-ui-react";
-import { Link } from "react-router-dom";
 
 class CategoryRouter extends Component {
   state = {
     items: [],
-    addNewBanner: false,
-    banner: "Banner",
+    addNewModal: false,
   };
-  handleOpenAddModal = () => this.setState({ addNewBanner: true });
-  handleCloseAddModal = () => this.setState({ addNewBanner: false });
+  handleOpenAddModal = () => this.setState({ addNewModal: true });
+  handleCloseAddModal = () => this.setState({ addNewModal: false });
 
   componentWillMount = async () => {
     console.log("ENETER");
     console.log(this.props.match.params);
-    if (Object.keys(this.props.selectedBanner).length === 0) {
+    if (Object.keys(this.props.banner).length === 0) {
       await this.props.GetBannerDetails(this.props.match.params.BID);
     }
     await this.props.FetchCategoryList(this.props.match.params.BID);
   };
   componentWillReceiveProps = (nP) => {
-    // console.log(nP.bannerList);
     this.setState({ items: nP.categoryList });
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
-    console.log("CATEGORIES");
     if (oldIndex !== newIndex) {
       await this.props.UpdateCategoryPriority(
         this.props.match.params.BID,
         this.state.items[oldIndex]._id,
         newIndex
       );
-      // console.log(this.state.items[oldIndex]._id, newIndex);
       this.setState({
         items: arrayMove(this.state.items, oldIndex, newIndex),
       });
     }
   };
   render() {
-    // console.log(this.props);
-    console.log("HELLEELLELELOOLLEO");
-    console.log(this.props);
+    const banner = this.props.banner;
     return (
       <div>
         <Switch>
@@ -73,16 +68,13 @@ class CategoryRouter extends Component {
               return (
                 <div className={"content-container"}>
                   <Header as="h3" dividing>
-                    {this.props.selectedBanner.title}
+                    {banner.title}
                   </Header>
                   <List bulleted horizontal link>
                     <List.Item as="a">
                       <Link to="/banners">Banners</Link>
                     </List.Item>
-                    <List.Item as="a">
-                      {" "}
-                      {this.props.selectedBanner.title}
-                    </List.Item>
+                    <List.Item as="a"> {banner.title}</List.Item>
                   </List>
                   <div
                     className={"banner-add-section"}
@@ -115,7 +107,7 @@ class CategoryRouter extends Component {
 const mapStateToProps = (state) => {
   return {
     categoryList: state.categoryList,
-    selectedBanner: state.selected.banner,
+    banner: state.selected.banner,
   };
 };
 
