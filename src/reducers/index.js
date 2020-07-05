@@ -5,6 +5,7 @@ import categoryList from "./categoryList";
 import notification from "./notifications";
 import selected from "./selected";
 import modelList from "./modelList";
+import specification from "./specification";
 
 const reducers = {
   user,
@@ -13,6 +14,7 @@ const reducers = {
   categoryList,
   selected,
   modelList,
+  specification,
 };
 
 export default combineReducers(reducers);

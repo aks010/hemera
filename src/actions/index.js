@@ -1,7 +1,6 @@
 import API from "../utils/API";
 
 import * as T from "./constants";
-import BannersList from "../reducers/bannerList";
 
 export const DisplayNotification = (message) => {
   return {
@@ -35,6 +34,13 @@ const UserDetails = (user) => {
   return {
     type: T.USER_DETAILS,
     payload: user,
+  };
+};
+
+const Specification = (specs) => {
+  return {
+    type: T.SPECIFICATIONS,
+    payload: specs,
   };
 };
 
@@ -99,6 +105,31 @@ export const FetchBannerList = () => async (dispatch) => {
       //       status: response.status,
       //     })
       //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const UpdateBanner = (id, data) => async (dispatch) => {
+  const response = await API.patch(`banners/update/${id}`, data);
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchBannerList()(dispatch);
       return;
     }
     default:
@@ -211,6 +242,31 @@ export const FetchCategoryList = (BID) => async (dispatch) => {
   }
 };
 
+export const UpdateCategory = (id, EID, data) => async (dispatch) => {
+  const response = await API.patch(`category/update/${id}`, data);
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchCategoryList(EID)(dispatch);
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 export const UpdateCategoryPriority = (BID, CID, priority) => async (
   dispatch
 ) => {
@@ -293,6 +349,29 @@ export const FetchSelectedItem = (id, EID, model) => async (dispatch) => {
   }
 };
 
+export const FetchModelSpecs = (EID, model) => async (dispatch) => {
+  const response = await API.get(`${model}/specs/${EID}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(Specification(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 export const FetchItemList = (EID, model) => async (dispatch) => {
   const response = await API.get(`${model}/list/${EID}`);
   console.log("FETCHING ITEMS");
@@ -305,6 +384,33 @@ export const FetchItemList = (EID, model) => async (dispatch) => {
           status: response.status,
         })
       );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const UpdateModel = (id, EID, model, data) => async (dispatch) => {
+  console.log("HEHR");
+  console.log(EID);
+  const response = await API.patch(`${model}/update/${id}`, data);
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchItemList(EID, model)(dispatch);
       return;
     }
     default:

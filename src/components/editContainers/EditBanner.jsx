@@ -2,38 +2,101 @@ import React from "react";
 import { Button, Header, Image, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 
-class editBanner extends React.Component {
-  handleClose = () => {
-    return this.props.history.goBack();
+import { Form } from "semantic-ui-react";
+
+import { UpdateBanner } from "../../actions/index";
+import { PLACEHOLDERS, LABELS } from "../viewContainers/bannerList/helper";
+
+class EditBanner extends React.Component {
+  state = {
+    banner: {},
+    form: {
+      title: "",
+      model: "",
+      link: "",
+    },
   };
-  handleSubmit = () => {
-    return this.props.history.goBack();
+
+  componentWillReceiveProps = (nP) => {
+    let form = {};
+    const banner = nP.banner;
+    if (banner) {
+      form["title"] = banner["title"];
+      form["model"] = banner["model"];
+      form["link"] = banner["link"];
+    }
+    this.setState({ banner: nP.banner, form });
+  };
+
+  handleChange = (e) => {
+    const form = this.state.form;
+    const { name, value } = e.target;
+    form[name] = value;
+    this.setState({ form });
+  };
+
+  handleSubmit = async () => {
+    // Remove Action
+    console.log("PRINTING");
+    let data = {};
+    const form = this.state.form;
+    const banner = this.state.banner;
+    Object.keys(form).forEach((el) => {
+      if (form[el] != banner[el]) data[el] = form[el];
+    });
+    const { _id } = this.state.banner;
+    await this.props.UpdateBanner(_id, data);
+    this.props.handleClose();
+    // window.location.href = "/banners";
   };
   render() {
-    console.log("IMODAL");
-    console.log(this.props);
-    console.log("CLICKS");
+    // console.log("IMODAL");
+    // console.log(this.props);
+    // console.log("CLICKS");
+    const { banner, form } = this.state;
     return (
       <div>
-        <Modal dimmer={true} open={true} onClose={this.handleClose}>
-          <Modal.Header>Select a Photo</Modal.Header>
-          <Modal.Content image>
-            <Image
-              wrapped
-              size="medium"
-              src="/images/avatar/large/rachel.png"
-            />
-            <Modal.Description>
-              <Header>Default Profile Image</Header>
-              <p>
-                We've found the following gravatar image associated with your
-                e-mail address.
-              </p>
-              <p>Is it okay to use this photo?</p>
-            </Modal.Description>
+        <Modal
+          open={this.props.open}
+          closeOnEscape={false}
+          closeOnDimmerClick={false}
+          onClose={this.props.handleClose}
+        >
+          <Modal.Header>Edit Banner {banner.title}</Modal.Header>
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <Form.Input
+                  label={LABELS["title"]}
+                  name={"title"}
+                  placeholder={PLACEHOLDERS["title"]}
+                  value={form["title"]}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Form.Input
+                  label={LABELS["link"]}
+                  name={"link"}
+                  placeholder={PLACEHOLDERS["link"]}
+                  value={form["link"]}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Form.Input
+                  disabled
+                  label={LABELS["model"]}
+                  name={"model"}
+                  placeholder={PLACEHOLDERS["model"]}
+                  value={form["model"]}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button color="black" onClick={this.handleClose}>
+            <Button color="black" onClick={this.props.handleClose}>
               Everthing's Cool !
             </Button>
             <Button
@@ -41,7 +104,7 @@ class editBanner extends React.Component {
               icon="checkmark"
               labelPosition="right"
               content="Make it Cooler!"
-              onClick={this.hanldeSubmit}
+              onClick={this.handleSubmit}
             />
           </Modal.Actions>
         </Modal>
@@ -52,8 +115,8 @@ class editBanner extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    banner: state.banner,
+    banner: state.selected.banner,
   };
 };
 
-export default connect(mapStateToProps)(editBanner);
+export default connect(mapStateToProps, { UpdateBanner })(EditBanner);

@@ -10,6 +10,7 @@ import {
   UpdateModelPriority,
   GetBannerDetails,
   GetCategoryDetails,
+  FetchModelSpecs,
 } from "../../../actions/index";
 import "./index.css";
 import Banners from "./ModelSortContainer";
@@ -22,6 +23,7 @@ class ModelListContainer extends Component {
       banner: {},
       category: {},
     },
+    specs: {},
     isCategory: false,
     addNewItem: false,
   };
@@ -46,14 +48,20 @@ class ModelListContainer extends Component {
 
     if (isCategory) {
       await this.props.FetchItemList(CID, model.toLowerCase());
+      await this.props.FetchModelSpecs(CID, model.toLowerCase());
     } else {
       await this.props.FetchItemList(BID, model.toLowerCase());
+      await this.props.FetchModelSpecs(BID, model.toLowerCase());
     }
     this.setState({ isCategory });
   };
 
   UNSAFE_componentWillReceiveProps = (nP) => {
-    this.setState({ items: nP.modelList, selected: nP.selected });
+    this.setState({
+      items: nP.modelList,
+      selected: nP.selected,
+      specs: nP.specs,
+    });
   };
 
   onSortEnd = async ({ oldIndex, newIndex, o }) => {
@@ -189,6 +197,7 @@ const mapStateToProps = (state) => {
   return {
     modelList: state.modelList,
     selected: state.selected,
+    specs: state.specification,
   };
 };
 
@@ -197,4 +206,5 @@ export default connect(mapStateToProps, {
   UpdateModelPriority,
   GetCategoryDetails,
   GetBannerDetails,
+  FetchModelSpecs,
 })(ModelListContainer);

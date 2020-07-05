@@ -14,6 +14,7 @@ const initialState = {
     model: {},
   },
   modelList: [],
+  specification: {},
 };
 
 export default initialState;

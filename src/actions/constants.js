@@ -8,3 +8,5 @@ export const SELECT_BANNER = "SELECT_BANNER";
 export const SELECT_CATEGORY = "SELECT_CATEGORY";
 export const SELECT_TYPE = "SELECT_TYPE";
 export const SELECT_MODEL = "SELECT_MODEL";
+
+export const SPECIFICATIONS = "SPECIFICATIONS";
