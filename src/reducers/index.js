@@ -6,6 +6,7 @@ import notification from "./notifications";
 import selected from "./selected";
 import modelList from "./modelList";
 import specification from "./specification";
+import modelTypes from "./modelTypes";
 
 const reducers = {
   user,
@@ -14,6 +15,7 @@ const reducers = {
   categoryList,
   selected,
   modelList,
+  modelTypes,
   specification,
 };
 

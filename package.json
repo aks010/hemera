@@ -20,8 +20,10 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-semantic-ui-datepickers": "^2.8.0",
     "react-sortable-hoc": "^1.11.0",
     "redux": "^4.0.5",
+    "semantic-ui-calendar-react": "^0.15.3",
     "semantic-ui-react": "^0.88.2"
   },
   "scripts": {

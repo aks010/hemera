@@ -9,4 +9,5 @@ export const SELECT_CATEGORY = "SELECT_CATEGORY";
 export const SELECT_TYPE = "SELECT_TYPE";
 export const SELECT_MODEL = "SELECT_MODEL";
 
+export const MODEL_TYPES = "MODEL_TYPES";
 export const SPECIFICATIONS = "SPECIFICATIONS";

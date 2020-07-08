@@ -54,7 +54,7 @@ class EditCategory extends React.Component {
   };
   render() {
     const { form, specs } = this.state;
-
+    const { model } = this.state.selected;
     return (
       <div>
         <Modal
@@ -63,32 +63,35 @@ class EditCategory extends React.Component {
           closeOnDimmerClick={false}
           onClose={this.props.handleClose}
         >
-          <Modal.Header>Edit Model</Modal.Header>
+          <Modal.Header>Edit Item {model && model.title}</Modal.Header>
           <Modal.Content scrolling>
             <Form>
               {specs.map((el) => {
-                return (
-                  <Form.Field>
-                    <Form.Input
-                      label={LABELS[el]}
-                      name={el}
-                      placeholder={PLACEHOLDERS[el]}
-                      value={form[el]}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                );
+                if (el !== "type")
+                  return (
+                    <Form.Field>
+                      <Form.Input
+                        label={LABELS[el]}
+                        name={el}
+                        placeholder={PLACEHOLDERS[el]}
+                        value={form[el]}
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                  );
               })}
             </Form>
           </Modal.Content>
 
           <Modal.Actions>
-            <Button onClick={this.props.handleClose}>Close</Button>
+            <Button color="black" onClick={this.props.handleClose}>
+              Everthing's Cool !
+            </Button>
             <Button
-              primary
+              positive
               icon="checkmark"
               labelPosition="right"
-              content="Submit"
+              content="Make it Cooler!"
               onClick={this.handleSubmit}
             />
           </Modal.Actions>

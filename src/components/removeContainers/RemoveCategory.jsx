@@ -21,8 +21,8 @@ class RemoveCategoryModal extends React.Component {
   };
   render() {
     const { category } = this.state;
-    console.log("REMOVEODAL");
-    console.log(this.state.category);
+    // console.log("REMOVEODAL");
+    // console.log(this.state.category);
     return (
       <div>
         <Modal

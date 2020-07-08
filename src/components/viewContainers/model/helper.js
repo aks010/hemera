@@ -6,6 +6,7 @@ export const LABELS = {
   caption: "Caption",
   type: "Type",
   rating: "Rating",
+  price: "Price",
 };
 
 export const PLACEHOLDERS = {
@@ -16,6 +17,7 @@ export const PLACEHOLDERS = {
   caption: "Enter caption or subtitle",
   type: "Enter type of item",
   rating: "Enter rating",
+  price: "Enter Price",
 };
 
 export const VALIDATORS = {};

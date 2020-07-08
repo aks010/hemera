@@ -20,8 +20,8 @@ class RemoveBannerModal extends React.Component {
   };
   render() {
     const { banner } = this.state;
-    console.log("REMOVEODAL");
-    console.log(this.state.banner);
+    // console.log("REMOVEODAL");
+    // console.log(this.state.banner);
     return (
       <div>
         <Modal

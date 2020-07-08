@@ -98,12 +98,14 @@ class EditCategory extends React.Component {
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={this.props.handleClose}>Close</Button>
+            <Button color="black" onClick={this.props.handleClose}>
+              Everthing's Cool !
+            </Button>
             <Button
-              primary
+              positive
               icon="checkmark"
               labelPosition="right"
-              content="Submit"
+              content="Make it Cooler!"
               onClick={this.handleSubmit}
             />
           </Modal.Actions>

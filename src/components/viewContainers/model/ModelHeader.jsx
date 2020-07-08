@@ -22,8 +22,8 @@ class BannerToolBar extends React.Component {
     // console.log(this.state);
     return (
       <div className={"banner-toolbar"}>
-        <FontAwesomeIcon icon={faEye} color={"rgb(34, 34, 34)"} />
-        <span style={{ widht: "1rem", margin: "1rem" }} />
+        {/* <FontAwesomeIcon icon={faEye} color={"rgb(34, 34, 34)"} /> */}
+        {/* <span style={{ widht: "1rem", margin: "1rem" }} /> */}
 
         <FontAwesomeIcon
           icon={faPencilAlt}

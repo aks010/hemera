@@ -30,6 +30,16 @@ const ModelList = (modelList) => {
   };
 };
 
+const ModelTypes = (modelTypes) => {
+  console.log("IN ASCTION");
+  console.log(T.MODEL_TYPES);
+  console.log(modelTypes);
+  return {
+    type: T.MODEL_TYPES,
+    payload: modelTypes,
+  };
+};
+
 const UserDetails = (user) => {
   return {
     type: T.USER_DETAILS,
@@ -105,6 +115,58 @@ export const FetchBannerList = () => async (dispatch) => {
       //       status: response.status,
       //     })
       //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const FetchModelTypes = () => async (dispatch) => {
+  const response = await API.get("/banners/models");
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(ModelTypes(response.data.data));
+      // console.log("COOLSLSLLS");
+      // console.log(response.data);
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const CreateBanner = (data) => async (dispatch) => {
+  console.log("HEHR");
+  const response = await API.post(`banners/create`, data);
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchBannerList()(dispatch);
       return;
     }
     default:
@@ -349,29 +411,6 @@ export const FetchSelectedItem = (id, EID, model) => async (dispatch) => {
   }
 };
 
-export const FetchModelSpecs = (EID, model) => async (dispatch) => {
-  const response = await API.get(`${model}/specs/${EID}`);
-  switch (response.status) {
-    case 200: {
-      dispatch(Specification(response.data.data));
-      //   dispatch(
-      //     DisplayNotification({
-      //       message: response.data.message,
-      //       status: response.status,
-      //     })
-      //   );
-      return;
-    }
-    default:
-      return dispatch(
-        DisplayNotification({
-          message: response.data.message,
-          status: response.status,
-        })
-      );
-  }
-};
-
 export const FetchItemList = (EID, model) => async (dispatch) => {
   const response = await API.get(`${model}/list/${EID}`);
   console.log("FETCHING ITEMS");
@@ -384,6 +423,36 @@ export const FetchItemList = (EID, model) => async (dispatch) => {
           status: response.status,
         })
       );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const AddModel = (EID, model, data) => async (dispatch) => {
+  console.log("HEHR");
+  console.log(EID);
+  const response = await API.post(
+    `${model}/create/${EID}/${data.type ? data.type : ""}`,
+    data
+  );
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchItemList(EID, model)(dispatch);
       return;
     }
     default:
@@ -472,6 +541,54 @@ export const RemoveModelItem = (id, model, EID) => async (dispatch) => {
         })
       );
       await FetchItemList(EID, model)(dispatch);
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+// SPECIFICATIONS
+
+export const FetchModelSpecs = (EID, model) => async (dispatch) => {
+  const response = await API.get(`specs/list/${EID}/${model}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(Specification(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const ViewModelSpecs = (model) => async (dispatch) => {
+  const response = await API.get(`specs/${model}`);
+  switch (response.status) {
+    case 200: {
+      dispatch(Specification(response.data.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
       return;
     }
     default:

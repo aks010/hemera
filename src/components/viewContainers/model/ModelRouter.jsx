@@ -14,7 +14,7 @@ import {
 } from "../../../actions/index";
 import "./index.css";
 import Banners from "./ModelSortContainer";
-import AddBannerModal from "../../addContainers/AddBanner";
+import AddModelItem from "../../addContainers/AddModel";
 
 class ModelListContainer extends Component {
   state = {
@@ -43,8 +43,6 @@ class ModelListContainer extends Component {
     if (Object.keys(banner).length === 0) {
       await this.props.GetBannerDetails(BID);
     }
-
-    console.log(model.toLowerCase());
 
     if (isCategory) {
       await this.props.FetchItemList(CID, model.toLowerCase());
@@ -184,7 +182,7 @@ class ModelListContainer extends Component {
           </div>
         )}
 
-        <AddBannerModal
+        <AddModelItem
           open={this.state.addNewItem}
           handleClose={this.handleCloseAddModal}
         />
