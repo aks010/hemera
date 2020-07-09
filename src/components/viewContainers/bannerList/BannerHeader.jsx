@@ -22,11 +22,7 @@ class BannerToolBar extends React.Component {
     console.log(this.state);
     return (
       <div className={"banner-toolbar"}>
-        <Link
-          to={`/banners/banner/${
-            this.props.id
-          }/${this.props.model.toLowerCase()}`}
-        >
+        <Link to={`/banner/${this.props.id}/${this.props.model.toLowerCase()}`}>
           <FontAwesomeIcon icon={faEye} color={"rgb(34, 34, 34)"} />
         </Link>
 

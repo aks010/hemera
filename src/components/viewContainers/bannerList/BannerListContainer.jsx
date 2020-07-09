@@ -15,6 +15,7 @@ import AddBannerModal from "../../addContainers/AddBanner";
 import { Header, List } from "semantic-ui-react";
 import CategoryRouter from "../category/CategoryRouter";
 import ModelRouter from "../model/ModelRouter";
+import Profile from "../../Profile";
 
 class BannerListContainer extends Component {
   state = {
@@ -51,14 +52,11 @@ class BannerListContainer extends Component {
     return (
       <div>
         <Switch>
+          <Route path="/profile" component={Profile} />
+          <Route path="/banner/:BID/category" component={CategoryRouter} />
+          <Route path="/banner/:BID/:model" component={ModelRouter} /> */}
           <Route
-            path="/banners/banner/:BID/category"
-            component={CategoryRouter}
-          />
-          <Route path="/banners/banner/:BID/:model" component={ModelRouter} />{" "}
-          */}
-          <Route
-            path="/banners"
+            path="/"
             render={(props) => {
               return (
                 <div className={"content-container"}>
@@ -85,10 +83,7 @@ class BannerListContainer extends Component {
                     open={this.state.addNewBanner}
                     handleClose={this.handleCloseAddModal}
                   />
-                  <Route
-                    path="/banners/:id/edit/"
-                    component={EditBannerModal}
-                  />
+                  <Route path="/:id/edit/" component={EditBannerModal} />
                 </div>
               );
             }}

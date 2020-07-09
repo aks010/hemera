@@ -55,15 +55,12 @@ class CategoryRouter extends Component {
       <div>
         <Switch>
           <Route
-            path="/banners/banner/:BID/category/:CID/:model/"
+            path="/banner/:BID/category/:CID/:model/"
             component={ModelContainer}
           />
+          <Route path="/banner/:BID/category/:CID/" component={TestContainer} />
           <Route
-            path="/banners/banner/:BID/category/:CID/"
-            component={TestContainer}
-          />
-          <Route
-            path="/banners/banner/:BID/Category"
+            path="/banner/:BID/Category"
             render={(props) => {
               return (
                 <div className={"content-container"}>
@@ -72,7 +69,7 @@ class CategoryRouter extends Component {
                   </Header>
                   <List bulleted horizontal link>
                     <List.Item as="a">
-                      <Link to="/banners">Banners</Link>
+                      <Link to="/">Banners</Link>
                     </List.Item>
                     <List.Item as="a"> {banner.title}</List.Item>
                   </List>

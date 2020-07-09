@@ -138,12 +138,10 @@ class ModelListContainer extends Component {
 
         <List bulleted horizontal link>
           <List.Item as="a">
-            <Link to="/banners">Banners</Link>
+            <Link to="/">Banners</Link>
           </List.Item>
           <List.Item as="a">
-            <Link to={`/banners/banner/${BID}/${banner.model}`}>
-              {banner.title}
-            </Link>
+            <Link to={`/banner/${BID}/${banner.model}`}>{banner.title}</Link>
           </List.Item>
           {isCategory && <List.Item as="a">{category.title}</List.Item>}
         </List>

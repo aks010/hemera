@@ -13,7 +13,7 @@ const WrapperContainer = () => {
     <BrowserRouter>
       <Notification />
       <Switch>
-        <PrivateRoute path="/banners" component={Banners} />
+        <PrivateRoute path="/" component={Banners} />
         <Route path="/login" exact={true} component={Login} />
         <Route path="/:id" component={Page404} />
       </Switch>

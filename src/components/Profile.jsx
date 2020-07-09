@@ -12,18 +12,14 @@ import {
   Icon,
 } from "semantic-ui-react";
 
-import { LoginUser } from "../actions/index";
-import { isUserAuthenticated } from "../utils/Auth";
-import "./index.css";
-
-class Login extends React.Component {
+class Profile extends React.Component {
   state = {
     email: "",
     password: "",
   };
 
-  componentDidMount = () => {
-    if (isUserAuthenticated()) this.props.history.push("/banners");
+  componentWillReceiveProps = (nP) => {
+    this.setState({ ...nP.user });
   };
 
   handleChange = (e) => {
@@ -34,10 +30,10 @@ class Login extends React.Component {
     console.log(form);
   };
 
-  handleSubmit = async () => {
-    await this.props.LoginUser(this.state);
-    this.props.history.push("/banners");
-  };
+  // handleSubmit = async () => {
+  //   await this.props.LoginUser(this.state);
+  //   this.props.history.push("/banners");
+  // };
 
   render() {
     return (
@@ -48,25 +44,25 @@ class Login extends React.Component {
               <Grid.Column verticalAlign="middle">
                 <Form>
                   <Form.Input
+                    icon="user"
+                    name="email"
+                    iconPosition="left"
+                    label="User Name"
+                    value={this.state.name}
+                    placeholder="UserName"
+                    disabled
+                  />
+                  <Form.Input
                     icon="mail"
                     name="email"
                     iconPosition="left"
                     label="Email"
                     value={this.state.email}
                     placeholder="Email"
-                    onChange={this.handleChange}
-                  />
-                  <Form.Input
-                    icon="lock"
-                    iconPosition="left"
-                    label="Password"
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
+                    disabled
                   />
 
-                  <Button content="Login" onClick={this.handleSubmit} primary />
+                  {/* <Button content="Login" onClick={this.handleSubmit} primary /> */}
                 </Form>
               </Grid.Column>
 
@@ -87,4 +83,10 @@ class Login extends React.Component {
   }
 }
 
-export default connect(null, { LoginUser })(Login);
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Profile);

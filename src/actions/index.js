@@ -114,6 +114,29 @@ export const FetchUserDetails = () => async (dispatch) => {
   }
 };
 
+// export const CreateUser = (data) => async (dispatch) => {
+//   const response = await API.post(`users/`, data, );
+//   switch (response.status) {
+//     case 201: {
+//       console.log(response.data);
+//       dispatch(
+//         DisplayNotification({
+//           message: `User Registered Successfully!`,
+//           status: response.status,
+//         })
+//       );
+//       return;
+//     }
+//     default:
+//       return dispatch(
+//         DisplayNotification({
+//           message: response.data.message,
+//           status: response.status,
+//         })
+//       );
+//   }
+// };
+
 export const LoginUser = (data) => async (dispatch) => {
   const response = await API.post(`users/login`, data);
   switch (response.status) {
@@ -617,12 +640,13 @@ export const AddModel = (EID, model, data) => async (dispatch) => {
   console.log("HEHR");
   console.log(EID);
   const response = await API.post(
-    `${model}/create/${EID}/${data.type ? data.type : ""},  {
-    headers: {
-      Authorization: getToken(),
-    },
-  }`,
-    data
+    `${model}/create/${EID}/${data.type ? data.type : ""}`,
+    data,
+    {
+      headers: {
+        Authorization: getToken(),
+      },
+    }
   );
   console.log(response.data.message);
   switch (response.status) {
@@ -687,13 +711,14 @@ export const UpdateModelPriority = (
 ) => async (dispatch) => {
   console.log("HEHR");
   const response = await API.patch(
-    `${model}/update_model_priority/${EID}/${id}/${type},  {
-    headers: {
-      Authorization: getToken(),
-    },
-  }`,
+    `${model}/update_model_priority/${EID}/${id}/${type}`,
     {
       priority,
+    },
+    {
+      headers: {
+        Authorization: getToken(),
+      },
     }
   );
   console.log(response.data.message);
