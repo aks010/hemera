@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import arrayMove from "array-move";
 import { connect } from "react-redux";
-import { FetchBannerList, UpdateBannerPriority } from "../../../actions/index";
+import {
+  FetchBannerList,
+  UpdateBannerPriority,
+  FetchUserDetails,
+} from "../../../actions/index";
 import "./index.css";
 import Banners from "./Banners";
 import { Switch, Route } from "react-router-dom";
@@ -21,6 +25,7 @@ class BannerListContainer extends Component {
   handleCloseAddModal = () => this.setState({ addNewBanner: false });
 
   componentDidMount = async () => {
+    await this.props.FetchUserDetails();
     await this.props.FetchBannerList();
   };
   componentWillReceiveProps = (nP) => {
@@ -101,6 +106,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  FetchUserDetails,
   FetchBannerList,
   UpdateBannerPriority,
 })(BannerListContainer);

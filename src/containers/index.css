@@ -37,3 +37,17 @@
 body {
   font-family: "CeraPro", "Rubik", "sans-serif";
 }
+
+.login-base-container {
+  margin: auto;
+
+  background: darkslategrey;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  align-self: center;
+  width: 80%;
+}

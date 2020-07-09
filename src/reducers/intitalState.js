@@ -1,8 +1,5 @@
 const initialState = {
-  user: {
-    name: "ashish",
-    role: "admin",
-  },
+  user: {},
   bannerList: [],
   banners: [],
   notification: {},

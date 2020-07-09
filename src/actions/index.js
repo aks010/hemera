@@ -2,6 +2,8 @@ import API from "../utils/API";
 
 import * as T from "./constants";
 
+import { getToken, authenticateUser, deauthenticateUser } from "../utils/Auth";
+
 export const DisplayNotification = (message) => {
   return {
     type: T.DISPLAY_NOTIFICATION,
@@ -79,10 +81,100 @@ export const SelectModel = (select) => {
   };
 };
 
+/// USER
+
+export const FetchUserDetails = () => async (dispatch) => {
+  const token = getToken();
+  console.log("FETCHING DETAILS");
+  console.log(token);
+  const response = await API.get(`users/me`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+  console.log(response);
+  switch (response.status) {
+    case 200: {
+      dispatch(UserDetails(response.data));
+      //   dispatch(
+      //     DisplayNotification({
+      //       message: response.data.message,
+      //       status: response.status,
+      //     })
+      //   );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const LoginUser = (data) => async (dispatch) => {
+  const response = await API.post(`users/login`, data);
+  switch (response.status) {
+    case 200: {
+      console.log(response.data);
+      dispatch(UserDetails(response.data.user));
+      authenticateUser(response.data.token);
+      dispatch(
+        DisplayNotification({
+          message: `Welcome ${response.data.user.name}!`,
+          status: response.status,
+        })
+      );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
+export const LogoutUser = () => async (dispatch) => {
+  const token = getToken();
+  const response = await API.get(`users/logout`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+  switch (response.status) {
+    case 200: {
+      dispatch(UserDetails({}));
+      deauthenticateUser();
+      dispatch(
+        DisplayNotification({
+          message: "Successfully Logged Out!",
+          status: response.status,
+        })
+      );
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
 /// BANNER APIs
 
 export const GetBannerDetails = (id) => async (dispatch) => {
-  const response = await API.get(`banners/read/${id}`);
+  const response = await API.get(`banners/read/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(SelectBanner(response.data.data));
@@ -105,7 +197,11 @@ export const GetBannerDetails = (id) => async (dispatch) => {
 };
 
 export const FetchBannerList = () => async (dispatch) => {
-  const response = await API.get("banners");
+  const response = await API.get("banners", {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(BannerList(response.data.data));
@@ -128,7 +224,11 @@ export const FetchBannerList = () => async (dispatch) => {
 };
 
 export const FetchModelTypes = () => async (dispatch) => {
-  const response = await API.get("/banners/models");
+  const response = await API.get("/banners/models", {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       // dispatch(BannerList(response.data.data));
@@ -155,7 +255,11 @@ export const FetchModelTypes = () => async (dispatch) => {
 
 export const CreateBanner = (data) => async (dispatch) => {
   console.log("HEHR");
-  const response = await API.post(`banners/create`, data);
+  const response = await API.post(`banners/create`, data, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.data.message);
   switch (response.status) {
     case 200: {
@@ -180,7 +284,11 @@ export const CreateBanner = (data) => async (dispatch) => {
 };
 
 export const UpdateBanner = (id, data) => async (dispatch) => {
-  const response = await API.patch(`banners/update/${id}`, data);
+  const response = await API.patch(`banners/update/${id}`, data, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.data.message);
   switch (response.status) {
     case 200: {
@@ -206,9 +314,17 @@ export const UpdateBanner = (id, data) => async (dispatch) => {
 
 export const UpdateBannerPriority = (id, priority) => async (dispatch) => {
   console.log("HEHR");
-  const response = await API.patch(`banners/update_priority_banner/${id}`, {
-    priority,
-  });
+  const response = await API.patch(
+    `banners/update_priority_banner/${id}`,
+    {
+      priority,
+    },
+    {
+      headers: {
+        Authorization: getToken(),
+      },
+    }
+  );
   console.log(response.data.message);
   switch (response.status) {
     case 200: {
@@ -232,7 +348,11 @@ export const UpdateBannerPriority = (id, priority) => async (dispatch) => {
 };
 
 export const RemoveBanner = (id) => async (dispatch) => {
-  const response = await API.delete(`banners/remove/${id}`);
+  const response = await API.delete(`banners/remove/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.status);
   switch (response.status) {
     case 200: {
@@ -243,7 +363,7 @@ export const RemoveBanner = (id) => async (dispatch) => {
           status: response.status,
         })
       );
-      FetchBannerList();
+      await FetchBannerList()(dispatch);
       return;
     }
     default:
@@ -259,7 +379,11 @@ export const RemoveBanner = (id) => async (dispatch) => {
 /// CATEGORY APIs
 
 export const GetCategoryDetails = (id) => async (dispatch) => {
-  const response = await API.get(`category/read/${id}`);
+  const response = await API.get(`category/read/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(SelectCategory(response.data.data));
@@ -282,7 +406,11 @@ export const GetCategoryDetails = (id) => async (dispatch) => {
 };
 
 export const FetchCategoryList = (BID) => async (dispatch) => {
-  const response = await API.get(`category/list/${BID}`);
+  const response = await API.get(`category/list/${BID}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(CategoryList(response.data.data));
@@ -304,8 +432,42 @@ export const FetchCategoryList = (BID) => async (dispatch) => {
   }
 };
 
+export const CreateCategory = (EID, data) => async (dispatch) => {
+  console.log("HEHR");
+  const response = await API.post(`category/create/${EID}`, data, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
+  console.log(response.data.message);
+  switch (response.status) {
+    case 200: {
+      // dispatch(BannerList(response.data.data));
+      dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+      await FetchCategoryList(EID)(dispatch);
+      return;
+    }
+    default:
+      return dispatch(
+        DisplayNotification({
+          message: response.data.message,
+          status: response.status,
+        })
+      );
+  }
+};
+
 export const UpdateCategory = (id, EID, data) => async (dispatch) => {
-  const response = await API.patch(`category/update/${id}`, data);
+  const response = await API.patch(`category/update/${id}`, data, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.data.message);
   switch (response.status) {
     case 200: {
@@ -334,7 +496,11 @@ export const UpdateCategoryPriority = (BID, CID, priority) => async (
 ) => {
   console.log("HEHR");
   const response = await API.patch(
-    `category/update_category_priority/${BID}/${CID}`,
+    `category/update_category_priority/${BID}/${CID},  {
+    headers: {
+      Authorization: getToken(),
+    },
+  }`,
     {
       priority,
     }
@@ -362,7 +528,11 @@ export const UpdateCategoryPriority = (BID, CID, priority) => async (
 };
 
 export const RemoveCategory = (id, BID) => async (dispatch) => {
-  const response = await API.delete(`category/remove/${id}`);
+  const response = await API.delete(`category/remove/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.status);
   switch (response.status) {
     case 200: {
@@ -389,7 +559,11 @@ export const RemoveCategory = (id, BID) => async (dispatch) => {
 /// MODEL APIs
 
 export const FetchSelectedItem = (id, EID, model) => async (dispatch) => {
-  const response = await API.get(`${model}/item/${EID}/${id}`);
+  const response = await API.get(`${model}/item/${EID}/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(SelectModel(response.data.data));
@@ -412,7 +586,11 @@ export const FetchSelectedItem = (id, EID, model) => async (dispatch) => {
 };
 
 export const FetchItemList = (EID, model) => async (dispatch) => {
-  const response = await API.get(`${model}/list/${EID}`);
+  const response = await API.get(`${model}/list/${EID}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log("FETCHING ITEMS");
   switch (response.status) {
     case 200: {
@@ -439,7 +617,11 @@ export const AddModel = (EID, model, data) => async (dispatch) => {
   console.log("HEHR");
   console.log(EID);
   const response = await API.post(
-    `${model}/create/${EID}/${data.type ? data.type : ""}`,
+    `${model}/create/${EID}/${data.type ? data.type : ""},  {
+    headers: {
+      Authorization: getToken(),
+    },
+  }`,
     data
   );
   console.log(response.data.message);
@@ -468,7 +650,11 @@ export const AddModel = (EID, model, data) => async (dispatch) => {
 export const UpdateModel = (id, EID, model, data) => async (dispatch) => {
   console.log("HEHR");
   console.log(EID);
-  const response = await API.patch(`${model}/update/${id}`, data);
+  const response = await API.patch(`${model}/update/${id}`, data, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.data.message);
   switch (response.status) {
     case 200: {
@@ -501,7 +687,11 @@ export const UpdateModelPriority = (
 ) => async (dispatch) => {
   console.log("HEHR");
   const response = await API.patch(
-    `${model}/update_model_priority/${EID}/${id}/${type}`,
+    `${model}/update_model_priority/${EID}/${id}/${type},  {
+    headers: {
+      Authorization: getToken(),
+    },
+  }`,
     {
       priority,
     }
@@ -529,7 +719,11 @@ export const UpdateModelPriority = (
 };
 
 export const RemoveModelItem = (id, model, EID) => async (dispatch) => {
-  const response = await API.delete(`${model}/remove/${id}`);
+  const response = await API.delete(`${model}/remove/${id}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   console.log(response.status);
   switch (response.status) {
     case 200: {
@@ -556,7 +750,11 @@ export const RemoveModelItem = (id, model, EID) => async (dispatch) => {
 // SPECIFICATIONS
 
 export const FetchModelSpecs = (EID, model) => async (dispatch) => {
-  const response = await API.get(`specs/list/${EID}/${model}`);
+  const response = await API.get(`specs/list/${EID}/${model}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(Specification(response.data.data));
@@ -579,7 +777,11 @@ export const FetchModelSpecs = (EID, model) => async (dispatch) => {
 };
 
 export const ViewModelSpecs = (model) => async (dispatch) => {
-  const response = await API.get(`specs/${model}`);
+  const response = await API.get(`specs/${model}`, {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
   switch (response.status) {
     case 200: {
       dispatch(Specification(response.data.data));

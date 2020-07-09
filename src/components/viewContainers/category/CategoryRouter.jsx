@@ -8,7 +8,7 @@ import arrayMove from "array-move";
 import CategorySortContainer from "./CategorySortContainer";
 import TestContainer from "../../../containers/TestContainer";
 import ModelContainer from "../model/ModelRouter";
-import AddBannerModal from "../../addContainers/AddBanner";
+import AddCategoryModal from "../../addContainers/AddCategory";
 import "./index.css";
 
 import {
@@ -20,10 +20,10 @@ import {
 class CategoryRouter extends Component {
   state = {
     items: [],
-    addNewModal: false,
+    addNewCategory: false,
   };
-  handleOpenAddModal = () => this.setState({ addNewModal: true });
-  handleCloseAddModal = () => this.setState({ addNewModal: false });
+  handleOpenAddModal = () => this.setState({ addNewCategory: true });
+  handleCloseAddModal = () => this.setState({ addNewCategory: false });
 
   componentWillMount = async () => {
     console.log("ENETER");
@@ -90,9 +90,10 @@ class CategoryRouter extends Component {
                     onSortEnd={this.onSortEnd}
                   />
 
-                  <AddBannerModal
-                    open={this.state.addNewBanner}
+                  <AddCategoryModal
+                    open={this.state.addNewCategory}
                     handleClose={this.handleCloseAddModal}
+                    EID={this.props.banner._id}
                   />
                 </div>
               );

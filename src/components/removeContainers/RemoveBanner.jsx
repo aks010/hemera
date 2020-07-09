@@ -14,9 +14,9 @@ class RemoveBannerModal extends React.Component {
   handleSubmit = async () => {
     console.log("SUBMIT");
     console.log(this.state.banner);
-    await this.props.RemoveBanner(this.state.banner.id);
+    await this.props.RemoveBanner(this.state.banner._id);
     console.log("DELETE OPR");
-    this.props.history.goBack();
+    this.props.handleClose();
   };
   render() {
     const { banner } = this.state;

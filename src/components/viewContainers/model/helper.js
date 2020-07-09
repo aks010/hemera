@@ -7,6 +7,9 @@ export const LABELS = {
   type: "Type",
   rating: "Rating",
   price: "Price",
+  icon: "Icon",
+  color: "Color",
+  count: "Count",
 };
 
 export const PLACEHOLDERS = {
@@ -18,6 +21,9 @@ export const PLACEHOLDERS = {
   type: "Enter type of item",
   rating: "Enter rating",
   price: "Enter Price",
+  icon: "Enter icon",
+  color: "Enter color",
+  count: "Enter count",
 };
 
 export const VALIDATORS = {};

@@ -31,6 +31,7 @@ class AddBanner extends React.Component {
     specs: [],
     selectSpecs: {},
     isFetching: false,
+    selected: "",
   };
 
   componentDidMount = () => {
@@ -78,9 +79,11 @@ class AddBanner extends React.Component {
   handleSelect = async (e, { value }) => {
     const { form } = this.state;
     form["model"] = value;
-    if (value != "Category") await this.props.ViewModelSpecs(value);
-
-    this.setState({ form });
+    if (value != "Category") {
+      this.setState({ isFetching: true, selected: value });
+      await this.props.ViewModelSpecs(value);
+    }
+    this.setState({ form, isFetching: false, selected: value });
   };
 
   handleToggle = (e, { value }) => {
@@ -109,6 +112,14 @@ class AddBanner extends React.Component {
     data["specs"] = specData;
     console.log(data);
     await this.props.CreateBanner(data);
+    this.setState({
+      form: {
+        title: "",
+        model: "",
+        link: "",
+      },
+      selected: "",
+    });
     this.props.handleClose();
     // window.location.href = "/banners";
   };
@@ -162,54 +173,47 @@ class AddBanner extends React.Component {
                   onChange={this.handleSelect}
                 />
               </Form.Field>
-              {form["model"] && form["model"] != "Category" && (
-                // <Segment style={{ zIndex: "0" }}>
-                //   <Dimmer active inverted>
-                //     <Loader inverted />
-                //   </Dimmer>
-                //   <Image src="./images/loader_content.png" />
-                // </Segment>
-                <Grid columns="three" divided>
-                  {Object.keys(specs).map((o) => {
-                    return (
-                      <Grid.Row>
-                        {specs[o].map((el) => (
-                          <Grid.Column>
-                            {this.props.specs.required.includes(el) ? (
-                              <Checkbox
-                                label={MODEL_LABELS[el]}
-                                disabled
-                                slider
-                                checked={true}
-                              />
-                            ) : (
-                              <Checkbox
-                                name={el}
-                                label={MODEL_LABELS[el]}
-                                onChange={this.handleToggle}
-                                value={el}
-                                slider
-                                checked={specs[el]}
-                              />
-                            )}
-                          </Grid.Column>
-                        ))}
-                      </Grid.Row>
-                    );
-                  })}
-                  {/* <Grid.Row>
-                    <Grid.Column>
-                      <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid> */}
-                </Grid>
+              {this.state.selected != "" && this.state.selected != "Category" && (
+                <React.Fragment>
+                  {this.state.isFetching ? (
+                    <Segment style={{ zIndex: "0" }}>
+                      <Dimmer active inverted>
+                        <Loader inverted />
+                      </Dimmer>
+                      <Image src="/images/loader_content.png" />
+                    </Segment>
+                  ) : (
+                    <Grid columns="three" divided>
+                      {Object.keys(specs).map((o) => {
+                        return (
+                          <Grid.Row>
+                            {specs[o].map((el) => (
+                              <Grid.Column>
+                                {this.props.specs.required.includes(el) ? (
+                                  <Checkbox
+                                    label={MODEL_LABELS[el]}
+                                    disabled
+                                    slider
+                                    checked={true}
+                                  />
+                                ) : (
+                                  <Checkbox
+                                    name={el}
+                                    label={MODEL_LABELS[el]}
+                                    onChange={this.handleToggle}
+                                    value={el}
+                                    slider
+                                    checked={specs[el]}
+                                  />
+                                )}
+                              </Grid.Column>
+                            ))}
+                          </Grid.Row>
+                        );
+                      })}
+                    </Grid>
+                  )}
+                </React.Fragment>
               )}
             </Form>
           </Modal.Content>
