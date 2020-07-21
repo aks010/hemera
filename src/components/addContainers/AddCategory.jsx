@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dropdown, Modal } from "semantic-ui-react";
+import { Button, Dropdown, Modal, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import {
@@ -19,6 +19,7 @@ import {
 } from "../../actions/index";
 import { PLACEHOLDERS, LABELS } from "../viewContainers/category/helper";
 import { LABELS as MODEL_LABELS } from "../viewContainers/model/helper";
+import { CategoryCreateFormValidator } from "../../utils/validator";
 
 class AddCategory extends React.Component {
   state = {
@@ -27,6 +28,7 @@ class AddCategory extends React.Component {
       childModel: "",
       link: "",
     },
+    errors: {},
     modelOptions: [],
     specs: [],
     selectSpecs: {},
@@ -96,41 +98,55 @@ class AddCategory extends React.Component {
   };
 
   handleSubmit = async () => {
-    // Remove Action
     const data = this.state.form;
-    //VALIDATE
-    // console.log(data);
-    console.log(this.state);
     const selectedSpecs = this.state.selectSpecs;
     console.log(selectedSpecs);
     const specData = [];
     Object.keys(selectedSpecs).forEach((o) => {
       if (selectedSpecs[o]) specData.push(o);
     });
-    // console.log(specData);
     data["specs"] = specData;
     console.log(data);
-    await this.props.CreateCategory(this.props.EID, data);
+
+    const errors = CategoryCreateFormValidator(
+      ["title", "childModel", "link"],
+      data
+    );
+
+    if (Object.keys(errors).length == 0) {
+      const closeModal = await this.props.CreateCategory(this.props.EID, data);
+
+      if (closeModal) {
+        this.props.handleClose();
+        this.setState({
+          form: {
+            title: "",
+            childModel: "",
+            link: "",
+          },
+          selected: "",
+          errors: {},
+        });
+      }
+    } else {
+      this.setState({ errors });
+    }
+  };
+
+  handleClose = () => {
     this.setState({
       form: {
         title: "",
-        model: "",
+        childModel: "",
         link: "",
       },
       selected: "",
+      errors: {},
     });
     this.props.handleClose();
-    // window.location.href = "/banners";
   };
-
   render() {
-    // console.log("IMODAL");
-    // console.log(this.props);
-    // console.log("CLICKS");
-    const { form, specs } = this.state;
-    console.log("PRINTING SPECS");
-    console.log(this.state);
-    // console.log(this.props);
+    const { form, specs, errors } = this.state;
     return (
       <div>
         <Modal
@@ -150,6 +166,11 @@ class AddCategory extends React.Component {
                   value={form["title"]}
                   onChange={this.handleChange}
                 />
+                {errors["title"] && (
+                  <Message color="red" size="tiny">
+                    {errors["title"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input
@@ -159,6 +180,12 @@ class AddCategory extends React.Component {
                   value={form["link"]}
                   onChange={this.handleChange}
                 />
+
+                {errors["link"] && (
+                  <Message color="red" size="tiny">
+                    {errors["link"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field style={{ width: "50%" }}>
                 <label>{LABELS["childModel"]}</label>
@@ -171,6 +198,12 @@ class AddCategory extends React.Component {
                   value={form["childModel"]}
                   onChange={this.handleSelect}
                 />
+
+                {errors["childModel"] && (
+                  <Message color="red" size="tiny">
+                    {errors["childModel"]}
+                  </Message>
+                )}
               </Form.Field>
               {this.state.selected != "" && this.state.selected != "Category" && (
                 <React.Fragment>
@@ -217,7 +250,7 @@ class AddCategory extends React.Component {
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={this.props.handleClose}>Close</Button>
+            <Button onClick={this.handleClose}>Close</Button>
             <Button primary onClick={this.handleSubmit}>
               Submit{" "}
             </Button>

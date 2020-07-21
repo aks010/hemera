@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Form, Modal, Input } from "semantic-ui-react";
+import { Button, Form, Modal, Message, Input } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import { UpdateModel } from "../../actions/index";
-
+import SemanticDatepicker from "react-semantic-ui-datepickers";
 import { LABELS, PLACEHOLDERS } from "../viewContainers/model/helper";
 
 class EditCategory extends React.Component {
@@ -15,6 +15,8 @@ class EditCategory extends React.Component {
 
   componentWillReceiveProps = (nP) => {
     let form = {};
+    console.log("PRINT PROPS");
+    console.log(nP);
     if (nP.selected.model)
       nP.specs.forEach((el) => (form[el] = nP.selected.model[el]));
     this.setState({ selected: nP.selected, specs: nP.specs, form });
@@ -24,6 +26,14 @@ class EditCategory extends React.Component {
     const { name, value } = e.target;
     const { form } = this.state;
     form[name] = value;
+    this.setState({ form });
+  };
+  handleDate = (event, data) => {
+    console.log("DATE");
+    console.log(event);
+    console.log(data);
+    const { form } = this.state;
+    form[data.namer] = data.value;
     this.setState({ form });
   };
 
@@ -55,6 +65,8 @@ class EditCategory extends React.Component {
   render() {
     const { form, specs } = this.state;
     const { model } = this.state.selected;
+    console.log("EDIT FORM __________________________");
+    console.log(form);
     return (
       <div>
         <Modal
@@ -67,7 +79,21 @@ class EditCategory extends React.Component {
           <Modal.Content scrolling>
             <Form>
               {specs.map((el) => {
-                if (el !== "type")
+                if (el !== "type") {
+                  if (el == "eventDate") {
+                    return (
+                      <Form.Field>
+                        <label>{LABELS[el]}</label>
+                        <SemanticDatepicker
+                          namer={el}
+                          onChange={this.handleDate}
+                          clearOnSameDateClick={false}
+                          placeholder={PLACEHOLDERS[el]}
+                          autoComplete
+                        />
+                      </Form.Field>
+                    );
+                  }
                   return (
                     <Form.Field>
                       <Form.Input
@@ -79,6 +105,7 @@ class EditCategory extends React.Component {
                       />
                     </Form.Field>
                   );
+                }
               })}
             </Form>
           </Modal.Content>

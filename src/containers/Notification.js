@@ -11,16 +11,17 @@ const GetMessageParams = (status) => {
     case 200:
       return { type: "success", title: "" };
     default:
-      return { type: "error", title: "" };
+      return { type: "danger", title: "" };
   }
 };
 
 class Notification extends React.Component {
   componentWillReceiveProps = (nP) => {
-    // console.log("cAlle");
-    // console.log(nP);
+    console.log("cAlle");
+    console.log(nP);
     if (nP.message) {
       const { title, type } = GetMessageParams(nP.status);
+      console.log("TYPE: " + type);
       store.addNotification({
         title,
         message: nP.message,

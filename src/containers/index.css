@@ -36,6 +36,8 @@
 
 body {
   font-family: "CeraPro", "Rubik", "sans-serif";
+  background-color: ghostwhite;
+  /* background-color: lightseagreen; */
 }
 
 .login-base-container {

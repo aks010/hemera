@@ -36,8 +36,6 @@ class EditCategory extends React.Component {
   };
 
   handleSubmit = async () => {
-    // Remove Action
-    console.log("PRINTING");
     let data = {};
     const form = this.state.form;
     const { category } = this.state.selected;
@@ -48,12 +46,9 @@ class EditCategory extends React.Component {
     const { _id: id } = this.state.selected.category;
     await this.props.UpdateCategory(id, BID, data);
     this.props.handleClose();
-    // window.location.href = "/banners";
   };
+
   render() {
-    // console.log("IMODAL");
-    // console.log(this.props);
-    // console.log("CLICKS");
     const { category } = this.state.selected;
     const { form } = this.state;
     return (

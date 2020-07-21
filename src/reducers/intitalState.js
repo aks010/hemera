@@ -1,7 +1,6 @@
 const initialState = {
   user: {},
   bannerList: [],
-  banners: [],
   notification: {},
   categoryList: [],
   selected: {

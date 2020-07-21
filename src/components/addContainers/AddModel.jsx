@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Button, Form, Modal, Dropdown } from "semantic-ui-react";
-import { DateInput } from "semantic-ui-calendar-react";
+import { Button, Form, Modal, Dropdown, Message } from "semantic-ui-react";
+
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
@@ -10,11 +10,14 @@ import { AddModel } from "../../actions/index";
 
 import { LABELS, PLACEHOLDERS } from "../viewContainers/model/helper";
 
+import { ModelCreateFormValidator } from "../../utils/validator";
+
 class AddModelItem extends React.Component {
   state = {
     selected: {},
     specs: [],
     form: {},
+    errors: {},
     modelOptions: [],
     other: false,
   };
@@ -66,24 +69,36 @@ class AddModelItem extends React.Component {
   handleSubmit = async () => {
     const { _id: CID, childModel } = this.state.selected.category || {};
     const { _id: BID, model } = this.state.selected.banner;
-    const data = this.state.form;
+    const { form: data, specs } = this.state;
 
-    console.log(data);
+    // console.log(data);
     // Validate Data
 
-    await this.props.AddModel(
-      CID ? CID : BID,
-      childModel ? childModel.toLowerCase() : model.toLowerCase(),
-      data
-    );
+    const errors = ModelCreateFormValidator(specs, data);
 
-    // console.log("CALLING");
+    if (Object.keys(errors).length == 0) {
+      const closeModal = await this.props.AddModel(
+        CID ? CID : BID,
+        childModel ? childModel.toLowerCase() : model.toLowerCase(),
+        data
+      );
+
+      // console.log("CALLING");
+      if (closeModal) {
+        this.props.handleClose();
+        this.setState({ form: {}, other: false, errors: {} });
+      }
+    } else {
+      this.setState({ errors });
+    }
+  };
+  handleClose = () => {
     this.props.handleClose();
-    this.setState({ form: {}, other: false });
+    this.setState({ form: {}, other: false, errors: {} });
   };
   render() {
     // console.log(this.props.modelLis  t);
-    const { form, specs } = this.state;
+    const { form, specs, errors } = this.state;
     console.log(form);
     console.log(this.state.other);
     return (
@@ -104,35 +119,56 @@ class AddModelItem extends React.Component {
                       <Form.Field>
                         <label>Type</label>
                         {this.state.other ? (
-                          <Dropdown
-                            placeholder={PLACEHOLDERS[el]}
-                            fluid
-                            search
-                            selection
-                            options={this.state.modelOptions}
-                            value={"other"}
-                            onChange={this.handleSelect}
-                          />
+                          <React.Fragment>
+                            <Dropdown
+                              placeholder={PLACEHOLDERS[el]}
+                              fluid
+                              search
+                              selection
+                              options={this.state.modelOptions}
+                              value={"other"}
+                              onChange={this.handleSelect}
+                            />
+                            {errors[el] && (
+                              <Message size="tiny" color="red">
+                                {errors[el]}
+                              </Message>
+                            )}
+                          </React.Fragment>
                         ) : (
-                          <Dropdown
-                            placeholder={PLACEHOLDERS[el]}
-                            fluid
-                            search
-                            selection
-                            options={this.state.modelOptions}
-                            value={form[el]}
-                            onChange={this.handleSelect}
-                          />
+                          <React.Fragment>
+                            <Dropdown
+                              placeholder={PLACEHOLDERS[el]}
+                              fluid
+                              search
+                              selection
+                              options={this.state.modelOptions}
+                              value={form[el]}
+                              onChange={this.handleSelect}
+                            />
+                            {errors[el] && (
+                              <Message size="tiny" color="red">
+                                {errors[el]}
+                              </Message>
+                            )}
+                          </React.Fragment>
                         )}
                       </Form.Field>
                       <Form.Field>
                         {this.state.other && (
-                          <Form.Input
-                            name={el}
-                            placeholder={PLACEHOLDERS[el]}
-                            value={form[el]}
-                            onChange={this.handleChange}
-                          />
+                          <React.Fragment>
+                            <Form.Input
+                              name={el}
+                              placeholder={PLACEHOLDERS[el]}
+                              value={form[el]}
+                              onChange={this.handleChange}
+                            />
+                            {errors[el] && (
+                              <Message size="tiny" color="red">
+                                {errors[el]}
+                              </Message>
+                            )}
+                          </React.Fragment>
                         )}
                       </Form.Field>
                     </React.Fragment>
@@ -149,6 +185,11 @@ class AddModelItem extends React.Component {
                         placeholder={PLACEHOLDERS[el]}
                         autoComplete
                       />
+                      {errors[el] && (
+                        <Message size="tiny" color="red">
+                          {errors[el]}
+                        </Message>
+                      )}
                     </Form.Field>
                   );
                 }
@@ -161,6 +202,11 @@ class AddModelItem extends React.Component {
                       value={form[el]}
                       onChange={this.handleChange}
                     />
+                    {errors[el] && (
+                      <Message size="tiny" color="red">
+                        {errors[el]}
+                      </Message>
+                    )}
                   </Form.Field>
                 );
               })}
@@ -168,7 +214,7 @@ class AddModelItem extends React.Component {
           </Modal.Content>
 
           <Modal.Actions>
-            <Button onClick={this.props.handleClose}>Close</Button>
+            <Button onClick={this.handleClose}>Close</Button>
             <Button primary onClick={this.handleSubmit}>
               Submit{" "}
             </Button>

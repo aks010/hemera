@@ -33,7 +33,7 @@ class NavHeader extends React.Component {
             />
           </Grid.Column>
           <Grid.Column verticalAlign="middle" textAlign="center">
-            <h2>MANAGE TOOL</h2>
+            <h2 style={{ fontFamily: "CeraPro-Light" }}>Customize Homepage</h2>
           </Grid.Column>
 
           <Grid.Column verticalAlign="middle" textAlign="right">
@@ -43,7 +43,7 @@ class NavHeader extends React.Component {
               hoverable
             >
               <List divided relaxed>
-                <List.Item>
+                {/* <List.Item>
                   <List.Icon
                     name="user plus"
                     size="small"
@@ -52,7 +52,7 @@ class NavHeader extends React.Component {
                   <List.Content>
                     <List.Header as="a">Register User</List.Header>
                   </List.Content>
-                </List.Item>
+                </List.Item> */}
                 <List.Item>
                   <List.Icon
                     name="sign out"

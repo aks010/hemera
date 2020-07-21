@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dropdown, Modal } from "semantic-ui-react";
+import { Button, Dropdown, Modal, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import {
@@ -19,6 +19,7 @@ import {
 } from "../../actions/index";
 import { PLACEHOLDERS, LABELS } from "../viewContainers/bannerList/helper";
 import { LABELS as MODEL_LABELS } from "../viewContainers/model/helper";
+import { BannerCreateFormValidator } from "../../utils/validator";
 
 class AddBanner extends React.Component {
   state = {
@@ -27,6 +28,7 @@ class AddBanner extends React.Component {
       model: "",
       link: "",
     },
+    errors: {},
     modelOptions: [],
     specs: [],
     selectSpecs: {},
@@ -111,24 +113,34 @@ class AddBanner extends React.Component {
     // console.log(specData);
     data["specs"] = specData;
     console.log(data);
-    await this.props.CreateBanner(data);
-    this.setState({
-      form: {
-        title: "",
-        model: "",
-        link: "",
-      },
-      selected: "",
-    });
-    this.props.handleClose();
-    // window.location.href = "/banners";
+
+    const errors = BannerCreateFormValidator(["title", "model", "link"], data);
+
+    if (Object.keys(errors).length == 0) {
+      const closeModal = await this.props.CreateBanner(data);
+      if (closeModal) {
+        this.setState({
+          form: {
+            title: "",
+            model: "",
+            link: "",
+          },
+          selected: "",
+        });
+
+        this.props.handleClose();
+        /// window.location.href = "/banners";
+      }
+    } else {
+      this.setState({ errors });
+    }
   };
 
   render() {
     // console.log("IMODAL");
     // console.log(this.props);
     // console.log("CLICKS");
-    const { form, specs } = this.state;
+    const { form, specs, errors } = this.state;
     console.log("PRINTING SPECS");
     console.log(this.state);
     // console.log(this.props);
@@ -151,6 +163,11 @@ class AddBanner extends React.Component {
                   value={form["title"]}
                   onChange={this.handleChange}
                 />
+                {errors["title"] && (
+                  <Message color="red" size="tiny">
+                    {errors["title"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input
@@ -160,6 +177,11 @@ class AddBanner extends React.Component {
                   value={form["link"]}
                   onChange={this.handleChange}
                 />
+                {errors["link"] && (
+                  <Message color="red" size="tiny">
+                    {errors["link"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field style={{ width: "50%" }}>
                 <label>{LABELS["model"]}</label>
@@ -172,6 +194,11 @@ class AddBanner extends React.Component {
                   value={form["model"]}
                   onChange={this.handleSelect}
                 />
+                {errors["model"] && (
+                  <Message color="red" size="tiny">
+                    {errors["model"]}
+                  </Message>
+                )}
               </Form.Field>
               {this.state.selected != "" && this.state.selected != "Category" && (
                 <React.Fragment>

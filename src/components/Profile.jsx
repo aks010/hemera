@@ -30,11 +30,6 @@ class Profile extends React.Component {
     console.log(form);
   };
 
-  // handleSubmit = async () => {
-  //   await this.props.LoginUser(this.state);
-  //   this.props.history.push("/banners");
-  // };
-
   render() {
     return (
       <div className={"login-base-container"}>
@@ -61,8 +56,6 @@ class Profile extends React.Component {
                     placeholder="Email"
                     disabled
                   />
-
-                  {/* <Button content="Login" onClick={this.handleSubmit} primary /> */}
                 </Form>
               </Grid.Column>
 
