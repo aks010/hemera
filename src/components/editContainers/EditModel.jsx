@@ -6,17 +6,21 @@ import { UpdateModel } from "../../actions/index";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import { LABELS, PLACEHOLDERS } from "../viewContainers/model/helper";
 
+import { ModelCreateFormValidator } from "../../utils/validator";
+
 class EditCategory extends React.Component {
   state = {
     selected: {},
     specs: [],
     form: {},
+    errors: {},
   };
+  ///
 
   componentWillReceiveProps = (nP) => {
     let form = {};
-    console.log("PRINT PROPS");
-    console.log(nP);
+    // console.log("PRINT PROPS");
+    // console.log(nP);
     if (nP.selected.model)
       nP.specs.forEach((el) => (form[el] = nP.selected.model[el]));
     this.setState({ selected: nP.selected, specs: nP.specs, form });
@@ -34,39 +38,51 @@ class EditCategory extends React.Component {
     console.log(data);
     const { form } = this.state;
     form[data.namer] = data.value;
+
+    console.log(form);
     this.setState({ form });
   };
 
   handleSubmit = async () => {
-    // Remove Action
-    // VALIDATE FORM
-
-    console.log("PRINTING");
-    console.log(this.state.selected.model);
     const { _id: CID, childModel } = this.state.selected.category;
     const { _id: BID, model } = this.state.selected.banner;
-    console.log(CID, BID);
-    console.log(this.state.selected);
     let data = {};
+
     this.state.specs.forEach((el) => {
       if (this.state.form[el] != this.state.selected.model[el])
         data[el] = this.state.form[el];
     });
-    console.log(data);
-    await this.props.UpdateModel(
-      this.state.selected.model._id,
-      CID ? CID : BID,
-      childModel ? childModel.toLowerCase() : model.toLowerCase(),
-      data
-    );
-    console.log("CALLING");
-    this.props.handleClose();
+
+    const errors = ModelCreateFormValidator(Object.keys(data), data);
+
+    if (Object.keys(errors).length == 0) {
+      const closeModal = await this.props.UpdateModel(
+        this.state.selected.model._id,
+        CID ? CID : BID,
+        childModel ? childModel.toLowerCase() : model.toLowerCase(),
+        data
+      );
+
+      if (closeModal) {
+        this.props.handleClose();
+        this.setState({ form: {}, other: false, errors: {} });
+      }
+    } else {
+      this.setState({ errors });
+    }
   };
+
+  getDate = (date) => {
+    if (!date) return null;
+    const dt = new Date(date);
+    const dte = new Date(dt);
+    return dte;
+  };
+
   render() {
-    const { form, specs } = this.state;
+    const { form, specs, errors } = this.state;
     const { model } = this.state.selected;
-    console.log("EDIT FORM __________________________");
-    console.log(form);
+
     return (
       <div>
         <Modal
@@ -83,14 +99,26 @@ class EditCategory extends React.Component {
                   if (el == "eventDate") {
                     return (
                       <Form.Field>
-                        <label>{LABELS[el]}</label>
+                        <label style={{ display: "inline-block" }}>
+                          {LABELS[el]}
+                        </label>
+                        <span style={{ marginLeft: "1rem" }}>
+                          {form[el] && String(form[el])}
+                        </span>
+                        <br />
                         <SemanticDatepicker
                           namer={el}
                           onChange={this.handleDate}
                           clearOnSameDateClick={false}
+                          selected={this.getDate(form[el])}
                           placeholder={PLACEHOLDERS[el]}
                           autoComplete
                         />
+                        {errors[el] && (
+                          <Message size="tiny" color="red">
+                            {errors[el]}
+                          </Message>
+                        )}
                       </Form.Field>
                     );
                   }
@@ -103,6 +131,11 @@ class EditCategory extends React.Component {
                         value={form[el]}
                         onChange={this.handleChange}
                       />
+                      {errors[el] && (
+                        <Message size="tiny" color="red">
+                          {errors[el]}
+                        </Message>
+                      )}
                     </Form.Field>
                   );
                 }

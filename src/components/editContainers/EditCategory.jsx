@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+import { Button, Message, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import { Form } from "semantic-ui-react";
 
 import { UpdateCategory } from "../../actions/index";
 import { PLACEHOLDERS, LABELS } from "../viewContainers/category/helper";
+import { CategoryCreateFormValidator } from "../../utils/validator";
 
 class EditCategory extends React.Component {
   state = {
@@ -15,6 +16,7 @@ class EditCategory extends React.Component {
       childModel: "",
       link: "",
     },
+    errors: {},
   };
 
   componentWillReceiveProps = (nP) => {
@@ -42,15 +44,33 @@ class EditCategory extends React.Component {
     Object.keys(form).forEach((el) => {
       if (form[el] != category[el]) data[el] = form[el];
     });
-    const { _id: BID } = this.state.selected.banner;
-    const { _id: id } = this.state.selected.category;
-    await this.props.UpdateCategory(id, BID, data);
-    this.props.handleClose();
+
+    const errors = CategoryCreateFormValidator(Object.keys(data), data);
+    if (Object.keys(errors).length == 0) {
+      const { _id: BID } = this.state.selected.banner;
+      const { _id: id } = this.state.selected.category;
+      const closeModal = await this.props.UpdateCategory(id, BID, data);
+
+      if (closeModal) {
+        this.props.handleClose();
+        this.setState({
+          form: {
+            title: "",
+            childModel: "",
+            link: "",
+          },
+          selected: "",
+          errors: {},
+        });
+      }
+    } else {
+      this.setState({ errors });
+    }
   };
 
   render() {
     const { category } = this.state.selected;
-    const { form } = this.state;
+    const { form, errors } = this.state;
     return (
       <div>
         <Modal
@@ -70,6 +90,11 @@ class EditCategory extends React.Component {
                   value={form["title"]}
                   onChange={this.handleChange}
                 />
+                {errors["title"] && (
+                  <Message color="red" size="tiny">
+                    {errors["title"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input
@@ -79,6 +104,11 @@ class EditCategory extends React.Component {
                   value={form["link"]}
                   onChange={this.handleChange}
                 />
+                {errors["link"] && (
+                  <Message color="red" size="tiny">
+                    {errors["link"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input

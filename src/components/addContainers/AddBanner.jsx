@@ -136,6 +136,19 @@ class AddBanner extends React.Component {
     }
   };
 
+  handleClose = () => {
+    this.setState({
+      form: {
+        title: "",
+        model: "",
+        link: "",
+      },
+      selected: "",
+    });
+
+    this.props.handleClose();
+  };
+
   render() {
     // console.log("IMODAL");
     // console.log(this.props);
@@ -245,7 +258,7 @@ class AddBanner extends React.Component {
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={this.props.handleClose}>Close</Button>
+            <Button onClick={this.handleClose}>Close</Button>
             <Button primary onClick={this.handleSubmit}>
               Submit{" "}
             </Button>

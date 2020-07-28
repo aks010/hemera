@@ -92,10 +92,12 @@ class AddModelItem extends React.Component {
       this.setState({ errors });
     }
   };
+
   handleClose = () => {
     this.props.handleClose();
     this.setState({ form: {}, other: false, errors: {} });
   };
+
   render() {
     // console.log(this.props.modelLis  t);
     const { form, specs, errors } = this.state;

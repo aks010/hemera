@@ -308,6 +308,7 @@ export const CreateBanner = (data) => async (dispatch) => {
 };
 
 export const UpdateBanner = (id, data) => async (dispatch) => {
+  let success = false;
   try {
     const response = await API.patch(`banners/update/${id}`, data, {
       headers: {
@@ -322,17 +323,20 @@ export const UpdateBanner = (id, data) => async (dispatch) => {
             status: response.status,
           })
         );
+        success = true;
         await FetchBannerList()(dispatch);
-        return;
+        break;
       }
       default:
-        return dispatch(
+        dispatch(
           DisplayNotification({
             message: response.data.message,
             status: response.status,
           })
         );
+        success = false;
     }
+    return success;
   } catch (e) {
     return dispatch(
       DisplayNotification({
@@ -340,6 +344,7 @@ export const UpdateBanner = (id, data) => async (dispatch) => {
         status: 500,
       })
     );
+    return false;
   }
 };
 
@@ -496,7 +501,7 @@ export const CreateCategory = (EID, data) => async (dispatch) => {
         );
         success = true;
         await FetchCategoryList(EID)(dispatch);
-        return;
+        break;
       }
       default: {
         dispatch(
@@ -506,6 +511,7 @@ export const CreateCategory = (EID, data) => async (dispatch) => {
           })
         );
         success = false;
+        break;
       }
     }
     return success;
@@ -520,6 +526,7 @@ export const CreateCategory = (EID, data) => async (dispatch) => {
   }
 };
 export const UpdateCategory = (id, EID, data) => async (dispatch) => {
+  let success = false;
   try {
     const response = await API.patch(`category/update/${id}`, data, {
       headers: {
@@ -536,17 +543,21 @@ export const UpdateCategory = (id, EID, data) => async (dispatch) => {
             status: response.status,
           })
         );
+        success = true;
         await FetchCategoryList(EID)(dispatch);
-        return;
+        break;
       }
-      default:
-        return dispatch(
+      default: {
+        dispatch(
           DisplayNotification({
             message: response.data.message,
             status: response.status,
           })
         );
+        break;
+      }
     }
+    return success;
   } catch (e) {
     return dispatch(
       DisplayNotification({
@@ -554,6 +565,7 @@ export const UpdateCategory = (id, EID, data) => async (dispatch) => {
         status: 500,
       })
     );
+    return false;
   }
 };
 export const UpdateCategoryPriority = (BID, CID, priority) => async (
@@ -762,9 +774,7 @@ export const AddModel = (EID, model, data) => async (dispatch) => {
   }
 };
 export const UpdateModel = (id, EID, model, data) => async (dispatch) => {
-  console.log("HEHR");
-  console.log(EID);
-
+  let success = false;
   try {
     const response = await API.patch(`${model}/update/${id}`, data, {
       headers: {
@@ -781,24 +791,29 @@ export const UpdateModel = (id, EID, model, data) => async (dispatch) => {
             status: response.status,
           })
         );
+        success = true;
         await FetchItemList(EID, model)(dispatch);
-        return;
+        break;
       }
       default:
-        return dispatch(
+        dispatch(
           DisplayNotification({
             message: response.data.message,
             status: response.status,
           })
         );
+        success = false;
+        break;
     }
+    return success;
   } catch (e) {
-    return dispatch(
+    dispatch(
       DisplayNotification({
         message: "Something went wrong",
         status: 500,
       })
     );
+    return false;
   }
 };
 export const UpdateModelPriority = (

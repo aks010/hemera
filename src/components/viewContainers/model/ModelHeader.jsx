@@ -28,14 +28,20 @@ class BannerToolBar extends React.Component {
         <FontAwesomeIcon
           icon={faPencilAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenEditModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenEditModal();
+          }}
         />
         <span style={{ widht: "1rem", margin: "1rem" }} />
 
         <FontAwesomeIcon
           icon={faTrashAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenRemoveModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenRemoveModal();
+          }}
         />
 
         <RemoveModel
@@ -58,18 +64,20 @@ class BannerToolBar extends React.Component {
 
 class BannerHeader extends React.Component {
   handleSelect = async () => {
+    console.log("sad click");
     const { BID, CID, model } = this.props.match.params;
     await this.props.FetchSelectedItem(this.props._id, CID ? CID : BID, model);
   };
   render() {
     // console.log(this.props);
     return (
-      <div className={"banner-header"} onClick={this.handleSelect}>
+      <div className={"banner-header"}>
         <div className={"banner-title"}>{this.props.title}</div>
         <BannerToolBar
           id={this.props._id}
           title={this.props.title}
           params={this.props.match.params}
+          handleSelect={this.handleSelect}
         />
       </div>
     );

@@ -30,14 +30,20 @@ class BannerToolBar extends React.Component {
         <FontAwesomeIcon
           icon={faPencilAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenEditModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenEditModal();
+          }}
         />
         <span style={{ widht: "1rem", margin: "1rem" }} />
 
         <FontAwesomeIcon
           icon={faTrashAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenRemoveModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenRemoveModal();
+          }}
         />
 
         <RemoveCategory
@@ -63,7 +69,7 @@ class CategoryHeader extends React.Component {
   render() {
     console.log(this.props);
     return (
-      <div className={"banner-header"} onClick={this.handleSelect}>
+      <div className={"banner-header"}>
         <div className={"banner-title"}>{this.props.title}</div>
         <BannerToolBar
           id={this.props._id}
@@ -72,6 +78,7 @@ class CategoryHeader extends React.Component {
           model={this.props.childModel}
           url={this.props.match.url}
           BID={this.props.match.params.BID}
+          handleSelect={this.handleSelect}
         />
       </div>
     );

@@ -9,7 +9,7 @@ const PrivateRoute = ({ component: Component }) => {
     <Route
       render={(props) =>
         isUserAuthenticated() ? (
-          <div>
+          <div style={{ overflow: "hidden" }}>
             <Header />
             <Component {...props} />
           </div>

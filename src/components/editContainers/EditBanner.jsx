@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+import { Button, Message, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import { Form } from "semantic-ui-react";
 
 import { UpdateBanner } from "../../actions/index";
 import { PLACEHOLDERS, LABELS } from "../viewContainers/bannerList/helper";
+import { BannerCreateFormValidator } from "../../utils/validator";
 
 class EditBanner extends React.Component {
   state = {
@@ -15,6 +16,7 @@ class EditBanner extends React.Component {
       model: "",
       link: "",
     },
+    errors: {},
   };
 
   componentWillReceiveProps = (nP) => {
@@ -44,16 +46,28 @@ class EditBanner extends React.Component {
     Object.keys(form).forEach((el) => {
       if (form[el] != banner[el]) data[el] = form[el];
     });
-    const { _id } = this.state.banner;
-    await this.props.UpdateBanner(_id, data);
-    this.props.handleClose();
-    // window.location.href = "/banners";
+
+    const errors = BannerCreateFormValidator(Object.keys(data), data);
+    if (Object.keys(errors).length == 0) {
+      const { _id } = this.state.banner;
+
+      const closeModal = await this.props.UpdateBanner(_id, data);
+      if (closeModal) {
+        this.setState({
+          form: {
+            title: "",
+            model: "",
+            link: "",
+          },
+        });
+        this.props.handleClose();
+      }
+    } else {
+      this.setState({ errors });
+    }
   };
   render() {
-    // console.log("IMODAL");
-    // console.log(this.props);
-    // console.log("CLICKS");
-    const { banner, form } = this.state;
+    const { banner, form, errors } = this.state;
     return (
       <div>
         <Modal
@@ -73,6 +87,11 @@ class EditBanner extends React.Component {
                   value={form["title"]}
                   onChange={this.handleChange}
                 />
+                {errors["title"] && (
+                  <Message color="red" size="tiny">
+                    {errors["title"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input
@@ -82,6 +101,11 @@ class EditBanner extends React.Component {
                   value={form["link"]}
                   onChange={this.handleChange}
                 />
+                {errors["link"] && (
+                  <Message color="red" size="tiny">
+                    {errors["link"]}
+                  </Message>
+                )}
               </Form.Field>
               <Form.Field>
                 <Form.Input

@@ -22,7 +22,10 @@ class BannerToolBar extends React.Component {
     console.log(this.state);
     return (
       <div className={"banner-toolbar"}>
-        <Link to={`/banner/${this.props.id}/${this.props.model.toLowerCase()}`}>
+        <Link
+          to={`/banner/${this.props.id}/${this.props.model.toLowerCase()}`}
+          onClick={this.props.handleSelect}
+        >
           <FontAwesomeIcon icon={faEye} color={"rgb(34, 34, 34)"} />
         </Link>
 
@@ -31,14 +34,20 @@ class BannerToolBar extends React.Component {
         <FontAwesomeIcon
           icon={faPencilAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenEditModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenEditModal();
+          }}
         />
         <span style={{ widht: "1rem", margin: "1rem" }} />
 
         <FontAwesomeIcon
           icon={faTrashAlt}
           color={"rgb(34, 34, 34)"}
-          onClick={this.handleOpenRemoveModal}
+          onClick={() => {
+            this.props.handleSelect();
+            this.handleOpenRemoveModal();
+          }}
         />
 
         <RemoveBanner
@@ -72,13 +81,14 @@ class BannerHeader extends React.Component {
   render() {
     console.log(this.props);
     return (
-      <div className={"banner-header"} onClick={this.handleSelect}>
+      <div className={"banner-header"}>
         <div className={"banner-title"}>{this.props.title}</div>
         <BannerToolBar
           id={this.props._id}
           title={this.props.title}
           link={this.props.link}
           model={this.props.model}
+          handleSelect={this.handleSelect}
         />
       </div>
     );
